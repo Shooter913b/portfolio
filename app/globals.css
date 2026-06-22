@@ -1,0 +1,338 @@
+@import "tailwindcss";
+
+:root {
+  --bg-base: #000000;
+  --bg-elevated: #0a0a0f;
+  --bg-subtle: #111118;
+  --text-primary: #f0f0f5;
+  --text-muted: #8888a0;
+  --accent-blue: #00d4ff;
+  --accent-purple: #a855f7;
+  --accent-blue-dim: #00d4ff33;
+  --accent-gradient: linear-gradient(
+    135deg,
+    var(--accent-blue) 0%,
+    var(--accent-purple) 100%
+  );
+  --accent-gradient-soft: linear-gradient(
+    135deg,
+    rgb(0 212 255 / 0.14) 0%,
+    rgb(168 85 247 / 0.14) 100%
+  );
+  --accent-glow-sm: 0 0 10px rgb(0 212 255 / 0.35),
+    0 0 20px rgb(168 85 247 / 0.25);
+  --accent-glow-md: 0 0 14px 3px rgb(0 212 255 / 0.45),
+    0 0 28px 6px rgb(168 85 247 / 0.35);
+  --accent-glow-lg: 0 0 0 1px rgb(0 212 255 / 0.2),
+    0 14px 40px -16px rgb(0 212 255 / 0.35),
+    0 24px 60px -24px rgb(168 85 247 / 0.3);
+  --accent-glow-xl: 0 24px 80px -32px rgb(0 212 255 / 0.28),
+    0 32px 100px -40px rgb(168 85 247 / 0.32);
+}
+
+@theme inline {
+  --color-bg-base: var(--bg-base);
+  --color-bg-elevated: var(--bg-elevated);
+  --color-bg-subtle: var(--bg-subtle);
+  --color-text-primary: var(--text-primary);
+  --color-text-muted: var(--text-muted);
+  --color-accent-blue: var(--accent-blue);
+  --color-accent-purple: var(--accent-purple);
+  --color-accent-blue-dim: var(--accent-blue-dim);
+  --font-display: var(--font-space-grotesk);
+  --font-body: var(--font-dm-sans);
+  --font-mono: var(--font-jetbrains-mono);
+}
+
+html {
+  scrollbar-width: none;
+}
+
+html::-webkit-scrollbar {
+  display: none;
+}
+
+body {
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-body), system-ui, sans-serif;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--accent-blue) 22%, var(--accent-purple) 22%);
+  color: var(--text-primary);
+}
+
+.hero-grid-bg {
+  background-image: radial-gradient(
+      circle at 1px 1px,
+      rgb(0 212 255 / 0.06) 1px,
+      transparent 0
+    ),
+    radial-gradient(
+      circle at 17px 17px,
+      rgb(168 85 247 / 0.045) 1px,
+      transparent 0
+    );
+  background-size: 32px 32px;
+}
+
+.accent-gradient-bg {
+  background: var(--accent-gradient);
+}
+
+.accent-gradient-soft-bg {
+  background: var(--accent-gradient-soft);
+}
+
+.accent-gradient-text {
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.accent-glow-sm {
+  box-shadow: var(--accent-glow-sm);
+}
+
+.accent-glow-md {
+  box-shadow: var(--accent-glow-md);
+}
+
+.accent-glow-lg {
+  box-shadow: var(--accent-glow-lg);
+}
+
+.accent-glow-xl {
+  box-shadow: var(--accent-glow-xl);
+}
+
+.timeline-dot {
+  background: linear-gradient(
+    135deg,
+    rgb(0 212 255 / 0.55) 0%,
+    rgb(168 85 247 / 0.45) 100%
+  );
+}
+
+.carousel-indicator-active {
+  background: var(--accent-gradient);
+  box-shadow: var(--accent-glow-sm);
+}
+
+.carousel-auto-progress {
+  animation-name: carousel-auto-progress;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+  transform-origin: left center;
+}
+
+@keyframes carousel-auto-progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes timeline-overlay-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.animate-timeline-overlay-in {
+  animation: timeline-overlay-in 0.22s ease-out;
+}
+
+/* Backdrop fade for the detail overlay (panel itself is animated via WAAPI). */
+@keyframes timeline-backdrop-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-backdrop-in {
+  animation: timeline-backdrop-in 0.35s ease-out both;
+}
+
+/* Timeline detail flip card: front = summary card, back = expanded view.
+   The element morphs (translate + scale) from the clicked card's rect while
+   rotating 180deg to reveal the back. */
+.timeline-flip-perspective {
+  perspective: 1800px;
+}
+
+.timeline-flip {
+  display: grid;
+  transform-style: preserve-3d;
+  transform-origin: center center;
+  will-change: transform;
+}
+
+.timeline-flip > * {
+  grid-area: 1 / 1;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.timeline-flip-back {
+  transform: rotateY(180deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-timeline-overlay-in {
+    animation: none;
+  }
+}
+
+@media (hover: hover) {
+  .hover-accent-glow-sm:hover {
+    box-shadow: var(--accent-glow-sm);
+  }
+}
+
+.timeline-card {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 200px;
+}
+
+/* Plane-driven focus: the entry the plane is snapped to gets emphasized. */
+[data-timeline-entry] [data-timeline-card] {
+  transition: opacity 0.35s ease, border-color 0.35s ease,
+    box-shadow 0.35s ease, transform 0.35s ease;
+}
+
+[data-timeline-entry][data-focused="true"] [data-timeline-card] {
+  opacity: 1;
+  border-color: color-mix(in srgb, var(--accent-blue) 55%, var(--accent-purple) 45%);
+  box-shadow: var(--accent-glow-lg);
+  transform: translateY(-2px);
+}
+
+[data-timeline-dot] {
+  /* Center on spine via transform only — never Tailwind translate utilities,
+     which stack with transform and double-apply the left focus offset. */
+  translate: none;
+  transform: translateX(-50%);
+  transition: transform 0.35s ease, background-color 0.35s ease,
+    box-shadow 0.35s ease;
+}
+
+[data-timeline-entry][data-focused="true"] [data-timeline-dot] {
+  background: var(--accent-gradient);
+  transform: translateX(-50%) scale(1.6);
+  box-shadow: var(--accent-glow-md);
+}
+
+/* Dot shifts toward the plane — symmetric ±14px from spine center. */
+[data-timeline-entry][data-focused="true"][data-focus-side="left"] [data-timeline-dot] {
+  transform: translateX(-50%) translateX(-14px) scale(1.6);
+}
+
+[data-timeline-entry][data-focused="true"][data-focus-side="right"] [data-timeline-dot] {
+  transform: translateX(-50%) translateX(14px) scale(1.6);
+}
+
+.timeline-card-resume {
+  content-visibility: visible;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scrollIndicatorBounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(5px);
+  }
+}
+
+.scroll-indicator-arrow {
+  animation: scrollIndicatorBounce 2s ease-in-out infinite;
+}
+
+@keyframes riseIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.animate-rise-in {
+  animation: riseIn 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+/* 3D flip card: faces stack via grid so the container sizes to the tallest. */
+.flip-perspective {
+  perspective: 1600px;
+}
+
+.flip-inner {
+  display: grid;
+  transform-style: preserve-3d;
+  transition: transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.flip-inner > * {
+  grid-area: 1 / 1;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.flip-face-front {
+  transform: rotateY(0deg);
+}
+
+.flip-face-back {
+  transform: rotateY(180deg);
+}
+
+/* Back face stacks on top in DOM — disable hits when hidden. */
+.flip-inner:not(.is-flipped) .flip-face-back {
+  pointer-events: none;
+}
+
+.flip-inner.is-flipped .flip-face-front {
+  pointer-events: none;
+}
+
+.flip-inner.is-flipped {
+  transform: rotateY(180deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

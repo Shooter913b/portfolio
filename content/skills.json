@@ -1,0 +1,218 @@
+{
+  "categories": [
+    {
+      "id": "skills-languages",
+      "label": "Languages",
+      "skills": [
+        {
+          "name": "Java",
+          "level": 4
+        },
+        {
+          "name": "Python",
+          "level": 4
+        },
+        {
+          "name": "HTML/CSS",
+          "level": 4
+        },
+        {
+          "name": "JavaScript",
+          "level": 4
+        },
+        {
+          "name": "Kotlin",
+          "level": 2
+        },
+        {
+          "name": "C++",
+          "level": 2
+        },
+        {
+          "name": "C#",
+          "level": 2
+        },
+        {
+          "name": "TypeScript",
+          "level": 1
+        },
+        {
+          "name": "Bash",
+          "level": 3
+        }
+      ]
+    },
+    {
+      "id": "skills-concepts",
+      "label": "Concepts",
+      "skills": [
+        {
+          "name": "OOP",
+          "level": 4
+        },
+        {
+          "name": "Localization",
+          "level": 4
+        },
+        {
+          "name": "Path Planning",
+          "level": 4
+        },
+        {
+          "name": "PID",
+          "level": 4
+        },
+        {
+          "name": "Sensor Fusion",
+          "level": 3
+        },
+        {
+          "name": "State Machines",
+          "level": 3
+        },
+        {
+          "name": "Kinematics",
+          "level": 2
+        }
+      ]
+    },
+    {
+      "id": "skills-frameworks",
+      "label": "Frameworks",
+      "skills": [
+        {
+          "name": "React",
+          "level": 4
+        },
+        {
+          "name": "Android",
+          "level": 4
+        },
+        {
+          "name": "Unity",
+          "level": 3
+        },
+        {
+          "name": "Node.js",
+          "level": 4
+        },
+        {
+          "name": "Next.js",
+          "level": 3
+        },
+        {
+          "name": "ROS",
+          "level": 1
+        },
+        {
+          "name": "Linux",
+          "level": 2
+        },
+        {
+          "name": "Material-UI",
+          "level": 2
+        },
+        {
+          "name": "Tailwind",
+          "level": 2
+        },
+        {
+          "name": "Arduino",
+          "level": 2
+        }
+      ]
+    },
+    {
+      "id": "skills-tools",
+      "label": "Tools",
+      "skills": [
+        {
+          "name": "Git",
+          "level": 4
+        },
+        {
+          "name": "Visual Studio",
+          "level": 4
+        },
+        {
+          "name": "JetBrains IDEs",
+          "level": 4
+        },
+        {
+          "name": "Onshape",
+          "level": 4
+        },
+        {
+          "name": "3D Printing",
+          "level": 4
+        },
+        {
+          "name": "CNC",
+          "level": 4
+        },
+        {
+          "name": "Fusion 360",
+          "level": 4
+        },
+        {
+          "name": "GCP",
+          "level": 2
+        },
+        {
+          "name": "Blender",
+          "level": 2
+        },
+        {
+          "name": "FEA",
+          "level": 3
+        },
+        {
+          "name": "Isaac Sim",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "skills-libraries",
+      "label": "Libraries",
+      "skills": [
+        {
+          "name": "TensorFlow",
+          "level": 3
+        },
+        {
+          "name": "OpenCV",
+          "level": 4
+        },
+        {
+          "name": "DJI MSDK",
+          "level": 4
+        },
+        {
+          "name": "NumPy",
+          "level": 4
+        },
+        {
+          "name": "pandas",
+          "level": 2
+        },
+        {
+          "name": "PyTorch",
+          "level": 2
+        },
+        {
+          "name": "face detection",
+          "level": 1
+        },
+        {
+          "name": "Matplotlib",
+          "level": 1
+        },
+        {
+          "name": "NLTK",
+          "level": 1
+        }
+      ]
+    }
+  ]
+}

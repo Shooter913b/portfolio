@@ -1,0 +1,276 @@
+{
+  "entries": [
+    {
+      "id": "resume-download",
+      "type": "resume",
+      "order": 0,
+      "visible": true
+    },
+    {
+      "id": "skills",
+      "type": "skills",
+      "order": 1,
+      "visible": true
+    },
+    {
+      "id": "sbel-research",
+      "type": "experience",
+      "order": 10,
+      "visible": true,
+      "title": "SBEL Student Researcher",
+      "startDate": "2026-04",
+      "endDate": null,
+      "summary": "Collaborated with Simulation-Based Engineering Lab researchers to validate physics-based simulations through experimental testing. Using…",
+      "body": [
+        "Collaborated with Simulation-Based Engineering Lab researchers to validate physics-based simulations through experimental testing. Using optimization tools like FEA, designed a custom inclining sandbox to compare simulated and real-world behavior.",
+        "Designed and implemented hardware/software systems for scale models of machines, including lunar landers, to generate experimental data and improve simulation parity with real testing."
+      ],
+      "tags": [
+        "FEA",
+        "Simulation",
+        "Hardware"
+      ],
+      "media": [],
+      "links": [],
+      "subtitle": "UW - Madison",
+      "location": "Madison, WI"
+    },
+    {
+      "id": "aed-drone",
+      "type": "experience",
+      "order": 11,
+      "visible": true,
+      "title": "Design Innovation Lab AED Drone Dev",
+      "startDate": "2025-11",
+      "endDate": null,
+      "summary": "Worked in a research lab to improve emergency response during ski races, motivated by a recent cardiac fatality at the American…",
+      "body": [
+        "Worked in a research lab to improve emergency response during ski races, motivated by a recent cardiac fatality at the American Birkebeiner. Led the software development for a drone-based rescue system, in partnership with DJI, enabling rapid and reliable delivery of medical aid by overcoming the access and response-time limitations of snowmobile-based rescue.",
+        "To make AED drone deployment accessible to non-expert users, designed a simple, user-friendly mobile application integrated with DJI's Mobile SDK (MSDK). Implemented a robust backend path-planning system that supports user-defined no-fly zones and computes optimal flight paths using the A* algorithm.",
+        "Collaborated with the lab director on a technical paper describing the project's methodology, system design, and performance results. Contributed analysis, discussion of impact, and proposed directions for future work."
+      ],
+      "tags": [
+        "DJI MSDK",
+        "A*",
+        "Path Planning",
+        "Android"
+      ],
+      "media": [],
+      "links": [],
+      "subtitle": "UW - Madison",
+      "location": "Madison, WI"
+    },
+    {
+      "id": "ceete",
+      "type": "experience",
+      "order": 12,
+      "visible": true,
+      "title": "CEETE Student Consultant",
+      "startDate": "2025-10",
+      "endDate": null,
+      "summary": "Partnered with instructors to leverage educational technology to enhance learning in engineering courses, integrating digital tools into…",
+      "body": [
+        "Partnered with instructors to leverage educational technology to enhance learning in engineering courses, integrating digital tools into course workflows and assignments.",
+        "Collaborated closely with peers and faculty to diagnose problems and deliver timely, effective solutions, minimizing disruption to instruction.",
+        "After noticing a gap in functionality, took the initiative to develop a tool to give instructors more control over their Canvas courses and calendars."
+      ],
+      "tags": [
+        "EdTech",
+        "Canvas"
+      ],
+      "media": [],
+      "links": [],
+      "subtitle": "Collaboratory for Engineering Education and Teaching Excellence",
+      "location": "Madison, WI"
+    },
+    {
+      "id": "ftc-captain",
+      "type": "experience",
+      "order": 13,
+      "visible": true,
+      "title": "FTC Team Captain",
+      "startDate": "2018-09",
+      "endDate": "2025-09",
+      "summary": "Founded and led an FTC robotics team to establish the community's first competitive robotics program, beginning in 6th grade. Built the…",
+      "body": [
+        "Founded and led an FTC robotics team to establish the community's first competitive robotics program, beginning in 6th grade. Built the organization from the ground up and scaled membership from 4 to 20+ students through active recruitment, mentorship, and a strong interdisciplinary team structure.",
+        "To address early underperformance and a nonexistent knowledge base, independently developed technical depth through rapid iteration, trial-and-error, and targeted outreach to industry experts. Led both mechanical design and autonomous software development, applying CAD/CAM, digital fabrication, localization, state machines, and computer vision.",
+        "Built a sustainable internal knowledge base and engineering culture, transforming team performance from last-place finishes to top 50 globally (out of 7,000+ teams), #1 in New England, and consistent top-10 statewide results.",
+        "Established partnerships with companies, schools, and libraries to support long-term team growth and sustainability. Managed fundraising and outreach early on, then scaled operations by delegating ownership to a student-led business team through structured leadership and documentation.",
+        "Earned 25+ competitive awards spanning Engineering Design, Innovate, Inspire, and Community Outreach, while leading STEM outreach initiatives that engaged over 5,000 students through workshops, demos, fairs, and public showcases."
+      ],
+      "tags": [
+        "Robotics",
+        "Leadership",
+        "CAD",
+        "Computer Vision"
+      ],
+      "media": [],
+      "links": [],
+      "subtitle": "Techno Maniacs",
+      "location": "Acton, MA"
+    },
+    {
+      "id": "princeton-apex",
+      "type": "experience",
+      "order": 14,
+      "visible": true,
+      "title": "Director of Encoder Development",
+      "startDate": "2024-08",
+      "endDate": "2025-09",
+      "summary": "Designed and prototyped a high-precision encoder optimized for FTC odometry, incorporating team feedback to improve accuracy,…",
+      "body": [
+        "Designed and prototyped a high-precision encoder optimized for FTC odometry, incorporating team feedback to improve accuracy, durability, and ease of integration.",
+        "Collaborated with engineers to refine mechanical and electrical interfaces, contributing to manufacturing-ready versions and supporting documentation for widespread team adoption."
+      ],
+      "tags": [
+        "Odometry",
+        "Hardware",
+        "CAD"
+      ],
+      "media": [],
+      "links": [],
+      "subtitle": "Princeton Apex Labs",
+      "location": "Princeton, NJ"
+    },
+    {
+      "id": "uw-education",
+      "type": "education",
+      "order": 15,
+      "visible": true,
+      "title": "Bachelor of Aerospace Engineering + Computer Science",
+      "startDate": "2025-09",
+      "endDate": null,
+      "summary": "GPA: 4.0/4.0",
+      "body": [
+        "GPA: 4.0/4.0"
+      ],
+      "tags": [],
+      "media": [],
+      "links": [],
+      "subtitle": "University of Wisconsin",
+      "location": "Madison, WI"
+    },
+    {
+      "id": "bobabyte",
+      "type": "project",
+      "order": 20,
+      "visible": true,
+      "title": "BobaByte Hackathon",
+      "startDate": "2025-01",
+      "endDate": "2025-01",
+      "summary": "Co-founded and hosted a student-run hackathon at the Boston Public Library, organizing venue logistics, scheduling, and event operations…",
+      "body": [
+        "Co-founded and hosted a student-run hackathon at the Boston Public Library, organizing venue logistics, scheduling, and event operations from the ground up.",
+        "Designed the event to be accessible to first-time and inexperienced coders by making participation free, providing free meals, and ensuring every participant received prizes and support.",
+        "Developed multiple project tracks and judging categories to encourage creativity across skill levels and interests, lowering barriers to entry while maintaining technical depth.",
+        "Partnered with industry sponsors and organizations to secure funding, mentorship, and prizes, creating a professional yet welcoming environment for new developers."
+      ],
+      "tags": [
+        "Java",
+        "Outreach",
+        "Event-planning"
+      ],
+      "media": [],
+      "links": [
+        {
+          "label": "Website",
+          "href": "https://bobabyte.org/",
+          "icon": "external"
+        }
+      ]
+    },
+    {
+      "id": "open-intake",
+      "type": "project",
+      "order": 21,
+      "visible": true,
+      "title": "Open Source Intake",
+      "startDate": "2024-12",
+      "endDate": "2025-05",
+      "summary": "Designed and released a modular, open-source active intake system for the FTC Into the Deep game to lower the barrier to competitive…",
+      "body": [
+        "Designed and released a modular, open-source active intake system for the FTC Into the Deep game to lower the barrier to competitive robot design. Optimized roller geometry and flexible mounting enabled fast, reliable pickup without precise alignment across diverse drivetrains.",
+        "Shared full CAD, build documentation, and usage guidelines to give back to the FTC community. Teams adapted and integrated components into their own systems, providing feedback that drove iterative updates and adoption by 100+ teams worldwide, including 3+ at the 2025 World Championship."
+      ],
+      "tags": [
+        "Java",
+        "Android",
+        "Onshape",
+        "3D Printing",
+        "CAM",
+        "CNC"
+      ],
+      "media": [],
+      "links": []
+    },
+    {
+      "id": "library-outreach",
+      "type": "project",
+      "order": 22,
+      "visible": true,
+      "title": "Library Outreach",
+      "startDate": "2023-06",
+      "endDate": "2025-06",
+      "summary": "Partnered with the Boxborough Albert J. Sargent Memorial Library to design and host recurring robotics showcases and hands-on workshops…",
+      "body": [
+        "Partnered with the Boxborough Albert J. Sargent Memorial Library to design and host recurring robotics showcases and hands-on workshops for the local community.",
+        "Developed and delivered beginner-friendly workshops covering topics such as coding, CAD, and robot design, tailoring content to students with little to no prior technical experience.",
+        "Created an accessible pathway into STEAM education by combining live demonstrations with interactive learning, inspiring younger students to explore robotics and engineering concepts.",
+        "Engaged directly with parents during showcases and workshops to explain local robotics pathways, competition structures, and time commitments, helping families make informed decisions about long-term involvement."
+      ],
+      "tags": [
+        "Java",
+        "Python",
+        "Onshape",
+        "Outreach"
+      ],
+      "media": [],
+      "links": []
+    },
+    {
+      "id": "linear-odo",
+      "type": "project",
+      "order": 23,
+      "visible": true,
+      "title": "Linear Odo",
+      "startDate": "2023-06",
+      "endDate": "2024-04",
+      "summary": "Engineered a novel linear-rail-based odometry system that improved localization accuracy tenfold over traditional FTC \"dead wheel\"…",
+      "body": [
+        "Engineered a novel linear-rail-based odometry system that improved localization accuracy tenfold over traditional FTC \"dead wheel\" designs, reducing drift from ~10 inches to under 1 inch over match duration.",
+        "Released as an open-source solution, the project introduced a shift from radial to linear mounting, influencing design practices across FTC teams and inspiring adoption by several hardware vendors."
+      ],
+      "tags": [
+        "Onshape",
+        "3D Printing",
+        "Java",
+        "Android"
+      ],
+      "media": [],
+      "links": []
+    },
+    {
+      "id": "open-swerve",
+      "type": "project",
+      "order": 24,
+      "visible": true,
+      "title": "Open Swerve",
+      "startDate": "2022-06",
+      "endDate": "2023-01",
+      "summary": "Independently pursued a challenging swerve-drive robotics project to accelerate skill growth in Arduino, Onshape, and C++, tackling…",
+      "body": [
+        "Independently pursued a challenging swerve-drive robotics project to accelerate skill growth in Arduino, Onshape, and C++, tackling complex problems including brushless motor control, gear train design, and sensor fusion despite limited prior experience.",
+        "Identified a lack of accessible open-source starting points for similar projects and chose to publish the design and code, enabling others to learn from, extend, and build upon the work."
+      ],
+      "tags": [
+        "C++",
+        "Arduino",
+        "Onshape",
+        "3D Printing"
+      ],
+      "media": [],
+      "links": []
+    }
+  ]
+}

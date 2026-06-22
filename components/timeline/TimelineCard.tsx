@@ -1,0 +1,76 @@
+"use client";
+
+import type { NarrativeEntry } from "@/lib/schemas/timeline";
+import { formatDateRange } from "@/lib/dates";
+import { getFeaturedMedia } from "@/lib/timeline/featuredMedia";
+import { Tag } from "@/components/ui/Tag";
+import { cn } from "@/lib/cn";
+import { TimelineCardFeatured } from "./TimelineCardFeatured";
+
+const MAX_TAGS = 3;
+
+type TimelineCardProps = {
+  entry: NarrativeEntry;
+};
+
+export function TimelineCard({ entry }: TimelineCardProps) {
+  const featuredMedia = getFeaturedMedia(entry.media);
+  const hasFeatured = featuredMedia.length > 0;
+  const hasDetails =
+    entry.body.length > 0 || entry.media.length > 0 || entry.links.length > 0;
+  const visibleTags = entry.tags.slice(0, MAX_TAGS);
+  const extraTags = entry.tags.length - visibleTags.length;
+  const metaLine = [entry.subtitle, entry.location].filter(Boolean).join(" · ");
+
+  return (
+    <div>
+      {hasFeatured && (
+        <div className="mb-4 md:hidden">
+          <TimelineCardFeatured items={featuredMedia} variant="banner" />
+        </div>
+      )}
+
+      <div className={cn(hasFeatured && "md:flex md:items-start md:gap-4")}>
+        {hasFeatured && (
+          <div className="hidden shrink-0 md:block">
+            <TimelineCardFeatured items={featuredMedia} variant="inline" />
+          </div>
+        )}
+
+        <div className="min-w-0 flex-1">
+          <p className="font-mono text-xs text-text-muted">
+            {formatDateRange(entry.startDate, entry.endDate)}
+          </p>
+          <h3 className="mt-1 font-display text-lg font-medium text-text-primary">
+            {entry.title}
+          </h3>
+          {metaLine && (
+            <p className="mt-1 text-sm text-text-muted">{metaLine}</p>
+          )}
+          <p className="mt-3 line-clamp-2 text-sm leading-relaxed text-text-muted">
+            {entry.summary}
+          </p>
+
+          {visibleTags.length > 0 && (
+            <div className="mt-3 flex flex-wrap items-center gap-2">
+              {visibleTags.map((tag) => (
+                <Tag key={tag}>{tag}</Tag>
+              ))}
+              {extraTags > 0 && (
+                <span className="font-mono text-[10px] text-text-muted">
+                  +{extraTags}
+                </span>
+              )}
+            </div>
+          )}
+
+          {hasDetails && (
+            <p className="mt-3 font-mono text-xs text-accent-blue/80">
+              View details →
+            </p>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}

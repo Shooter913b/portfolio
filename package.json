@@ -1,0 +1,38 @@
+{
+  "name": "elfrick-portfolio",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "clean": "rm -rf .next out",
+    "postinstall": "node scripts/copy-pdf-worker.mjs",
+    "dev": "node scripts/prepare-blog.mjs && node scripts/ensure-resume-pdf.mjs && node scripts/copy-pdf-worker.mjs && node scripts/dev-runner.mjs",
+    "dev:netlify": "netlify dev",
+    "prebuild": "node scripts/prepare-blog.mjs && node scripts/ensure-resume-pdf.mjs && node scripts/copy-pdf-worker.mjs",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "build:resume": "bash scripts/build-resume.sh",
+    "sync:resume:overleaf": "bash scripts/sync-resume-from-overleaf.sh"
+  },
+  "dependencies": {
+    "gray-matter": "^4.0.3",
+    "next": "^15.3.3",
+    "pdfjs-dist": "^4.10.38",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "zod": "^3.25.67"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.3.1",
+    "@netlify/functions": "^3.1.10",
+    "@tailwindcss/postcss": "^4.1.10",
+    "@types/node": "^22.15.32",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "eslint": "^9.29.0",
+    "eslint-config-next": "^15.3.3",
+    "tailwindcss": "^4.1.10",
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.3"
+  }
+}
