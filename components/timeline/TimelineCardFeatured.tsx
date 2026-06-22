@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import type { TimelineMediaItem } from "@/lib/schemas/timeline-media";
+import { ImageLightbox } from "@/components/media/ImageLightbox";
 import {
   getMediaPreviewSrc,
   isPlayableMedia,
@@ -30,28 +31,52 @@ function PlayOverlay() {
 function FeaturedPreview({
   item,
   variant,
+  onExpandImage,
 }: {
   item: TimelineMediaItem;
   variant: "banner" | "inline" | "thumb";
+  onExpandImage?: () => void;
 }) {
   const previewSrc = getMediaPreviewSrc(item);
   const playable = isPlayableMedia(item);
+  const expandable = item.type === "image" && Boolean(onExpandImage);
 
   return (
     <div
       className={cn(
-        "relative shrink-0 overflow-hidden rounded-lg border border-white/10 bg-bg-subtle",
+        "relative flex shrink-0 items-center justify-center overflow-hidden rounded-lg border border-white/10 bg-bg-subtle",
         variant === "banner" && "aspect-[2/1] w-full",
         variant === "thumb" && "aspect-[5/3] w-full",
-        variant === "inline" && "aspect-[5/3] w-full"
+        variant === "inline" && "aspect-[5/3] w-full",
+        expandable && "cursor-zoom-in"
       )}
+      data-media-expand={expandable ? "" : undefined}
+      onClick={(event) => {
+        if (!expandable) return;
+        event.stopPropagation();
+        onExpandImage?.();
+      }}
+      onKeyDown={(event) => {
+        if (!expandable) return;
+        if (event.key !== "Enter" && event.key !== " ") return;
+        event.preventDefault();
+        event.stopPropagation();
+        onExpandImage?.();
+      }}
+      role={expandable ? "button" : undefined}
+      tabIndex={expandable ? 0 : undefined}
+      aria-label={
+        expandable
+          ? `View full image: ${item.alt ?? item.caption ?? "featured image"}`
+          : undefined
+      }
     >
       {previewSrc ? (
         <Image
           src={previewSrc}
           alt={item.alt ?? item.caption ?? ""}
           fill
-          className="object-cover"
+          className="object-contain"
           sizes={
             variant === "inline"
               ? "(max-width: 1024px) 100vw, 224px"
@@ -77,6 +102,7 @@ export function TimelineCardFeatured({
   const reducedMotion = useReducedMotion();
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
 
   const next = useCallback(() => {
     setIndex((current) => (current + 1) % items.length);
@@ -96,6 +122,7 @@ export function TimelineCardFeatured({
 
   const item = items[index];
   const showControls = items.length > 1;
+  const lightboxSrc = item.type === "image" ? item.src : null;
 
   return (
     <div
@@ -103,7 +130,11 @@ export function TimelineCardFeatured({
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      <FeaturedPreview item={item} variant={variant} />
+      <FeaturedPreview
+        item={item}
+        variant={variant}
+        onExpandImage={lightboxSrc ? () => setLightboxOpen(true) : undefined}
+      />
 
       {showControls && (
         <div
@@ -140,6 +171,16 @@ export function TimelineCardFeatured({
             </span>
           )}
         </div>
+      )}
+
+      {lightboxSrc && (
+        <ImageLightbox
+          src={lightboxSrc}
+          alt={item.alt}
+          caption={item.caption}
+          open={lightboxOpen}
+          onClose={() => setLightboxOpen(false)}
+        />
       )}
     </div>
   );

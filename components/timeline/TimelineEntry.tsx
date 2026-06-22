@@ -58,7 +58,13 @@ export function TimelineEntry({ entry, site, index }: TimelineEntryProps) {
             data-timeline-side={isLeft ? "left" : "right"}
             className={cardClassName}
             onClick={(event) => {
-              if ((event.target as HTMLElement).closest("[data-carousel-control]")) return;
+              const target = event.target as HTMLElement;
+              if (
+                target.closest("[data-carousel-control]") ||
+                target.closest("[data-media-expand]")
+              ) {
+                return;
+              }
               openOverlay(
                 entry.id,
                 isLeft ? "left" : "right",
