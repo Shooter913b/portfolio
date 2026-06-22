@@ -2,22 +2,24 @@
   "entries": [
     {
       "id": "resume-download",
-      "type": "resume",
       "order": 0,
-      "visible": true
+      "visible": true,
+      "type": "resume"
     },
     {
       "id": "skills",
-      "type": "skills",
-      "order": 1,
-      "visible": true
+      "order": 10,
+      "visible": true,
+      "type": "skills"
     },
     {
       "id": "sbel-research",
-      "type": "experience",
-      "order": 10,
+      "order": 20,
       "visible": true,
+      "type": "experience",
       "title": "SBEL Student Researcher",
+      "subtitle": "UW - Madison",
+      "location": "Madison, WI",
       "startDate": "2026-04",
       "endDate": null,
       "summary": "Collaborated with Simulation-Based Engineering Lab researchers to validate physics-based simulations through experimental testing. Using…",
@@ -31,16 +33,16 @@
         "Hardware"
       ],
       "media": [],
-      "links": [],
-      "subtitle": "UW - Madison",
-      "location": "Madison, WI"
+      "links": []
     },
     {
       "id": "aed-drone",
-      "type": "experience",
-      "order": 11,
+      "order": 30,
       "visible": true,
+      "type": "experience",
       "title": "Design Innovation Lab AED Drone Dev",
+      "subtitle": "UW - Madison",
+      "location": "Madison, WI",
       "startDate": "2025-11",
       "endDate": null,
       "summary": "Worked in a research lab to improve emergency response during ski races, motivated by a recent cardiac fatality at the American…",
@@ -56,16 +58,16 @@
         "Android"
       ],
       "media": [],
-      "links": [],
-      "subtitle": "UW - Madison",
-      "location": "Madison, WI"
+      "links": []
     },
     {
       "id": "ceete",
-      "type": "experience",
-      "order": 12,
+      "order": 40,
       "visible": true,
+      "type": "experience",
       "title": "CEETE Student Consultant",
+      "subtitle": "Collaboratory for Engineering Education and Teaching Excellence",
+      "location": "Madison, WI",
       "startDate": "2025-10",
       "endDate": null,
       "summary": "Partnered with instructors to leverage educational technology to enhance learning in engineering courses, integrating digital tools into…",
@@ -79,16 +81,16 @@
         "Canvas"
       ],
       "media": [],
-      "links": [],
-      "subtitle": "Collaboratory for Engineering Education and Teaching Excellence",
-      "location": "Madison, WI"
+      "links": []
     },
     {
       "id": "ftc-captain",
-      "type": "experience",
-      "order": 13,
+      "order": 50,
       "visible": true,
+      "type": "experience",
       "title": "FTC Team Captain",
+      "subtitle": "Techno Maniacs",
+      "location": "Acton, MA",
       "startDate": "2018-09",
       "endDate": "2025-09",
       "summary": "Founded and led an FTC robotics team to establish the community's first competitive robotics program, beginning in 6th grade. Built the…",
@@ -106,16 +108,16 @@
         "Computer Vision"
       ],
       "media": [],
-      "links": [],
-      "subtitle": "Techno Maniacs",
-      "location": "Acton, MA"
+      "links": []
     },
     {
       "id": "princeton-apex",
-      "type": "experience",
-      "order": 14,
+      "order": 60,
       "visible": true,
+      "type": "experience",
       "title": "Director of Encoder Development",
+      "subtitle": "Princeton Apex Labs",
+      "location": "Princeton, NJ",
       "startDate": "2024-08",
       "endDate": "2025-09",
       "summary": "Designed and prototyped a high-precision encoder optimized for FTC odometry, incorporating team feedback to improve accuracy,…",
@@ -129,16 +131,16 @@
         "CAD"
       ],
       "media": [],
-      "links": [],
-      "subtitle": "Princeton Apex Labs",
-      "location": "Princeton, NJ"
+      "links": []
     },
     {
       "id": "uw-education",
-      "type": "education",
-      "order": 15,
+      "order": 70,
       "visible": true,
-      "title": "Bachelor of Aerospace Engineering + Computer Science",
+      "type": "education",
+      "title": "Bachelor of Computer Science + Aerospace Engineering",
+      "subtitle": "University of Wisconsin",
+      "location": "Madison, WI",
       "startDate": "2025-09",
       "endDate": null,
       "summary": "GPA: 4.0/4.0",
@@ -146,16 +148,21 @@
         "GPA: 4.0/4.0"
       ],
       "tags": [],
-      "media": [],
-      "links": [],
-      "subtitle": "University of Wisconsin",
-      "location": "Madison, WI"
+      "media": [
+        {
+          "src": "/timeline/uw-education/uw-madison-logo-1782157750331.png",
+          "alt": "",
+          "type": "image",
+          "featured": true
+        }
+      ],
+      "links": []
     },
     {
       "id": "bobabyte",
-      "type": "project",
-      "order": 20,
+      "order": 80,
       "visible": true,
+      "type": "project",
       "title": "BobaByte Hackathon",
       "startDate": "2025-01",
       "endDate": "2025-01",
@@ -182,9 +189,9 @@
     },
     {
       "id": "open-intake",
-      "type": "project",
-      "order": 21,
+      "order": 90,
       "visible": true,
+      "type": "project",
       "title": "Open Source Intake",
       "startDate": "2024-12",
       "endDate": "2025-05",
@@ -206,9 +213,9 @@
     },
     {
       "id": "library-outreach",
-      "type": "project",
-      "order": 22,
+      "order": 100,
       "visible": true,
+      "type": "project",
       "title": "Library Outreach",
       "startDate": "2023-06",
       "endDate": "2025-06",
@@ -230,9 +237,9 @@
     },
     {
       "id": "linear-odo",
-      "type": "project",
-      "order": 23,
+      "order": 110,
       "visible": true,
+      "type": "project",
       "title": "Linear Odo",
       "startDate": "2023-06",
       "endDate": "2024-04",
@@ -252,9 +259,9 @@
     },
     {
       "id": "open-swerve",
-      "type": "project",
-      "order": 24,
+      "order": 120,
       "visible": true,
+      "type": "project",
       "title": "Open Swerve",
       "startDate": "2022-06",
       "endDate": "2023-01",
