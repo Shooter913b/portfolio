@@ -18,7 +18,7 @@ export const handler: Handler = async (event) => {
     });
 
     return redirect(`https://github.com/login/oauth/authorize?${params.toString()}`, {
-      "Set-Cookie": `oauth_state=${state}; Path=/; HttpOnly; SameSite=Lax; Max-Age=600${secure}`,
+      cookies: [`oauth_state=${state}; Path=/; HttpOnly; SameSite=Lax; Max-Age=600${secure}`],
     });
   } catch (error) {
     return {

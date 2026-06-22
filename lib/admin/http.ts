@@ -5,6 +5,7 @@ import { DEV_LOGIN, isAdminDevBypass } from "./devMode";
 export type HandlerResult = {
   statusCode: number;
   headers?: Record<string, string>;
+  multiValueHeaders?: Record<string, string[]>;
   body: string;
 };
 
@@ -20,12 +21,27 @@ export function json(
   };
 }
 
-export function redirect(location: string, headers: Record<string, string> = {}): HandlerResult {
-  return {
+type RedirectOptions = {
+  cookies?: string[];
+  headers?: Record<string, string>;
+};
+
+/** Netlify requires multiple Set-Cookie values via multiValueHeaders, not comma-joined headers. */
+export function redirect(location: string, options: RedirectOptions = {}): HandlerResult {
+  const result: HandlerResult = {
     statusCode: 302,
-    headers: { Location: location, ...headers },
+    headers: { Location: location, ...options.headers },
     body: "",
   };
+
+  const cookies = options.cookies ?? [];
+  if (cookies.length === 1) {
+    result.headers = { ...result.headers, "Set-Cookie": cookies[0] };
+  } else if (cookies.length > 1) {
+    result.multiValueHeaders = { "Set-Cookie": cookies };
+  }
+
+  return result;
 }
 
 export function getRequestSession(

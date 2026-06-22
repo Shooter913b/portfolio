@@ -44,7 +44,7 @@ export const handler: Handler = async (event) => {
 
     if (!tokenResponse.ok) {
       return redirect(`${origin}/admin?error=token_exchange`, {
-        "Set-Cookie": clearState,
+        cookies: [clearState],
       });
     }
 
@@ -55,7 +55,7 @@ export const handler: Handler = async (event) => {
 
     if (!tokenData.access_token) {
       return redirect(`${origin}/admin?error=token_missing`, {
-        "Set-Cookie": clearState,
+        cookies: [clearState],
       });
     }
 
@@ -63,7 +63,7 @@ export const handler: Handler = async (event) => {
     const allowed = getAllowedUsers();
     if (allowed.length > 0 && !allowed.includes(user.login.toLowerCase())) {
       return redirect(`${origin}/admin?error=not_allowed`, {
-        "Set-Cookie": clearState,
+        cookies: [clearState],
       });
     }
 
@@ -76,8 +76,10 @@ export const handler: Handler = async (event) => {
       requireEnv("SESSION_SECRET")
     );
 
+    // Set only the session cookie here — combining multiple Set-Cookie headers in one
+    // header breaks in browsers. oauth_state expires on its own after 10 minutes.
     return redirect(`${origin}/admin`, {
-      "Set-Cookie": [clearState, buildSessionCookie(session, SESSION_MAX_AGE)].join(", "),
+      cookies: [buildSessionCookie(session, SESSION_MAX_AGE)],
     });
   } catch (error) {
     const origin = getSiteOrigin(event.headers);
