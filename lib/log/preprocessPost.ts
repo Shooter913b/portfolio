@@ -74,5 +74,11 @@ export function preprocessPostFrontmatter(raw: unknown): unknown {
     ...rest
   } = data;
 
-  return { ...rest, media };
+  const relatedTimeline = Array.isArray(data.relatedTimeline)
+    ? data.relatedTimeline.filter((id): id is string => typeof id === "string" && id.length > 0)
+    : typeof data.relatedTimeline === "string" && data.relatedTimeline
+      ? [data.relatedTimeline]
+      : [];
+
+  return { ...rest, media, relatedTimeline };
 }

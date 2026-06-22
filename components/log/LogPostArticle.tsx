@@ -4,7 +4,7 @@ import {
   getFeaturedPostMedia,
   getSupplementaryPostMedia,
 } from "@/lib/log/postMedia";
-import { resolvePostTimelineRef } from "@/lib/log/timelinePosts";
+import { resolvePostTimelineRefs } from "@/lib/log/timelinePosts";
 import { LogPostBody } from "./LogPostBody";
 import { LogPostGallery } from "./LogPostGallery";
 import { LogPostHeader } from "./LogPostHeader";
@@ -18,7 +18,7 @@ type LogPostArticleProps = {
 export function LogPostArticle({ post }: LogPostArticleProps) {
   const featuredMedia = getFeaturedPostMedia(post);
   const supplementaryMedia = getSupplementaryPostMedia(post);
-  const timelineRef = resolvePostTimelineRef(post);
+  const timelineRefs = resolvePostTimelineRefs(post);
 
   return (
     <main className="mx-auto min-h-screen max-w-3xl px-5 py-20 sm:px-6 sm:py-24">
@@ -30,7 +30,7 @@ export function LogPostArticle({ post }: LogPostArticleProps) {
       </Link>
 
       <div className="mt-8 animate-rise-in space-y-6">
-        <LogPostHeader post={post} timelineRef={timelineRef} />
+        <LogPostHeader post={post} timelineRefs={timelineRefs} />
 
         {featuredMedia.length > 0 && (
           <LogPostMediaCarousel items={featuredMedia} />

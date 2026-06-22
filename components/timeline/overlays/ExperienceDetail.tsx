@@ -31,7 +31,7 @@ export function ExperienceDetail({ entry, titleId }: ExperienceDetailProps) {
         </div>
 
         {hasMedia && (
-          <div>
+          <div className="min-w-0">
             <SectionLabel>Gallery</SectionLabel>
             <div className="space-y-4">
               {entry.media.map((item) => (

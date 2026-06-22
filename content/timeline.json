@@ -2,22 +2,24 @@
   "entries": [
     {
       "id": "resume-download",
-      "type": "resume",
       "order": 0,
-      "visible": true
+      "visible": true,
+      "type": "resume"
     },
     {
       "id": "skills",
-      "type": "skills",
-      "order": 1,
-      "visible": true
+      "order": 10,
+      "visible": true,
+      "type": "skills"
     },
     {
       "id": "sbel-research",
-      "type": "experience",
-      "order": 10,
+      "order": 20,
       "visible": true,
+      "type": "experience",
       "title": "SBEL Student Researcher",
+      "subtitle": "UW - Madison",
+      "location": "Madison, WI",
       "startDate": "2026-04",
       "endDate": null,
       "summary": "Collaborated with Simulation-Based Engineering Lab researchers to validate physics-based simulations through experimental testing. Using…",
@@ -31,16 +33,16 @@
         "Hardware"
       ],
       "media": [],
-      "links": [],
-      "subtitle": "UW - Madison",
-      "location": "Madison, WI"
+      "links": []
     },
     {
       "id": "aed-drone",
-      "type": "experience",
-      "order": 11,
+      "order": 30,
       "visible": true,
+      "type": "experience",
       "title": "Design Innovation Lab AED Drone Dev",
+      "subtitle": "UW - Madison",
+      "location": "Madison, WI",
       "startDate": "2025-11",
       "endDate": null,
       "summary": "Worked in a research lab to improve emergency response during ski races, motivated by a recent cardiac fatality at the American…",
@@ -55,17 +57,24 @@
         "Path Planning",
         "Android"
       ],
-      "media": [],
-      "links": [],
-      "subtitle": "UW - Madison",
-      "location": "Madison, WI"
+      "media": [
+        {
+          "src": "/timeline/aed-drone/aed-drone-thumbnail-1782166354444.png",
+          "alt": "Drone hovering over field",
+          "type": "image",
+          "featured": true
+        }
+      ],
+      "links": []
     },
     {
       "id": "ceete",
-      "type": "experience",
-      "order": 12,
+      "order": 40,
       "visible": true,
+      "type": "experience",
       "title": "CEETE Student Consultant",
+      "subtitle": "Collaboratory for Engineering Education and Teaching Excellence",
+      "location": "Madison, WI",
       "startDate": "2025-10",
       "endDate": null,
       "summary": "Partnered with instructors to leverage educational technology to enhance learning in engineering courses, integrating digital tools into…",
@@ -79,16 +88,15 @@
         "Canvas"
       ],
       "media": [],
-      "links": [],
-      "subtitle": "Collaboratory for Engineering Education and Teaching Excellence",
-      "location": "Madison, WI"
+      "links": []
     },
     {
       "id": "ftc-captain",
-      "type": "experience",
-      "order": 13,
+      "order": 50,
       "visible": true,
+      "type": "experience",
       "title": "FTC Team Captain",
+      "location": "Acton, MA",
       "startDate": "2018-09",
       "endDate": "2025-09",
       "summary": "Founded and led an FTC robotics team to establish the community's first competitive robotics program, beginning in 6th grade. Built the…",
@@ -105,17 +113,55 @@
         "CAD",
         "Computer Vision"
       ],
-      "media": [],
-      "links": [],
-      "subtitle": "Techno Maniacs",
-      "location": "Acton, MA"
+      "media": [
+        {
+          "src": "/timeline/ftc-captain/thumbnail.jpg",
+          "alt": "The Technomaniacs Team",
+          "type": "image",
+          "featured": true
+        },
+        {
+          "src": "/timeline/ftc-captain/CAD.png",
+          "alt": "Robot CAD render",
+          "caption": "CAD design",
+          "type": "image"
+        },
+        {
+          "src": "/timeline/ftc-captain/outreach.jpeg",
+          "alt": "Team outreach event",
+          "caption": "Community outreach",
+          "type": "image"
+        },
+        {
+          "src": "/timeline/ftc-captain/prep.jpeg",
+          "alt": "Competition preparation",
+          "caption": "Competition prep",
+          "type": "image"
+        },
+        {
+          "src": "https://youtu.be/0QKHZENgOhA?si=gRQokBIm4OADkZTJ",
+          "alt": "2024 Season FTC Robot",
+          "caption": "2024 Centerstage States robot",
+          "type": "youtube",
+          "featured": true
+        }
+      ],
+      "links": [
+        {
+          "label": "Youtube Channel",
+          "href": "https://www.youtube.com/@TechnoManiacs16021/videos",
+          "icon": "external"
+        }
+      ]
     },
     {
       "id": "princeton-apex",
-      "type": "experience",
-      "order": 14,
+      "order": 60,
       "visible": true,
+      "type": "experience",
       "title": "Director of Encoder Development",
+      "subtitle": "Princeton Apex Labs",
+      "location": "Princeton, NJ",
       "startDate": "2024-08",
       "endDate": "2025-09",
       "summary": "Designed and prototyped a high-precision encoder optimized for FTC odometry, incorporating team feedback to improve accuracy,…",
@@ -129,16 +175,16 @@
         "CAD"
       ],
       "media": [],
-      "links": [],
-      "subtitle": "Princeton Apex Labs",
-      "location": "Princeton, NJ"
+      "links": []
     },
     {
       "id": "uw-education",
-      "type": "education",
-      "order": 15,
+      "order": 70,
       "visible": true,
+      "type": "education",
       "title": "Bachelor of Aerospace Engineering + Computer Science",
+      "subtitle": "University of Wisconsin",
+      "location": "Madison, WI",
       "startDate": "2025-09",
       "endDate": null,
       "summary": "GPA: 4.0/4.0",
@@ -147,15 +193,13 @@
       ],
       "tags": [],
       "media": [],
-      "links": [],
-      "subtitle": "University of Wisconsin",
-      "location": "Madison, WI"
+      "links": []
     },
     {
       "id": "bobabyte",
-      "type": "project",
-      "order": 20,
+      "order": 80,
       "visible": true,
+      "type": "project",
       "title": "BobaByte Hackathon",
       "startDate": "2025-01",
       "endDate": "2025-01",
@@ -171,7 +215,20 @@
         "Outreach",
         "Event-planning"
       ],
-      "media": [],
+      "media": [
+        {
+          "src": "/timeline/bobabyte/bobabyte-1782165111203.jpeg",
+          "alt": "",
+          "type": "image",
+          "featured": false
+        },
+        {
+          "src": "/timeline/bobabyte/bobabyte-logo-1782165549443.png",
+          "alt": "BobaByte Logo",
+          "type": "image",
+          "featured": true
+        }
+      ],
       "links": [
         {
           "label": "Website",
@@ -182,13 +239,13 @@
     },
     {
       "id": "open-intake",
-      "type": "project",
-      "order": 21,
+      "order": 90,
       "visible": true,
+      "type": "project",
       "title": "Open Source Intake",
       "startDate": "2024-12",
       "endDate": "2025-05",
-      "summary": "Designed and released a modular, open-source active intake system for the FTC Into the Deep game to lower the barrier to competitive…",
+      "summary": "Designed and released a modular, open-source active intake system for the FTC Into the Deep game to lower the barrier to competitive robot design.",
       "body": [
         "Designed and released a modular, open-source active intake system for the FTC Into the Deep game to lower the barrier to competitive robot design. Optimized roller geometry and flexible mounting enabled fast, reliable pickup without precise alignment across diverse drivetrains.",
         "Shared full CAD, build documentation, and usage guidelines to give back to the FTC community. Teams adapted and integrated components into their own systems, providing feedback that drove iterative updates and adoption by 100+ teams worldwide, including 3+ at the 2025 World Championship."
@@ -196,19 +253,41 @@
       "tags": [
         "Java",
         "Android",
+        "State Machines",
         "Onshape",
         "3D Printing",
         "CAM",
         "CNC"
       ],
-      "media": [],
+      "media": [
+        {
+          "src": "/timeline/open-intake/thumbnail.jpg",
+          "alt": "Open source intake system on robot",
+          "type": "image",
+          "featured": true
+        },
+        {
+          "src": "/timeline/open-intake/CAD.png",
+          "alt": "Intake CAD assembly",
+          "caption": "CAD assembly",
+          "type": "image",
+          "featured": true
+        },
+        {
+          "src": "/timeline/open-intake/testing.mp4",
+          "alt": "Intake testing",
+          "caption": "Pickup testing",
+          "type": "video",
+          "poster": "/timeline/open-intake/testing-thumbnail.jpeg"
+        }
+      ],
       "links": []
     },
     {
       "id": "library-outreach",
-      "type": "project",
-      "order": 22,
+      "order": 100,
       "visible": true,
+      "type": "project",
       "title": "Library Outreach",
       "startDate": "2023-06",
       "endDate": "2025-06",
@@ -230,9 +309,9 @@
     },
     {
       "id": "linear-odo",
-      "type": "project",
-      "order": 23,
+      "order": 110,
       "visible": true,
+      "type": "project",
       "title": "Linear Odo",
       "startDate": "2023-06",
       "endDate": "2024-04",
@@ -247,14 +326,42 @@
         "Java",
         "Android"
       ],
-      "media": [],
+      "media": [
+        {
+          "src": "/timeline/linear-odo/thumbnail.jpg",
+          "alt": "Linear odometry module",
+          "type": "image",
+          "featured": true
+        },
+        {
+          "src": "/timeline/linear-odo/prototype.mp4",
+          "alt": "Prototype odometry test",
+          "caption": "Prototype testing",
+          "type": "video",
+          "poster": "/timeline/linear-odo/prototype-thumbnail.jpeg"
+        },
+        {
+          "src": "/timeline/linear-odo/example.mp4",
+          "alt": "Odometry in match",
+          "caption": "Match example",
+          "type": "video",
+          "poster": "/timeline/linear-odo/example-thumbnail.jpeg"
+        },
+        {
+          "src": "/timeline/linear-odo/test-example.mp4",
+          "alt": "Accuracy test run",
+          "caption": "Accuracy test",
+          "type": "video",
+          "poster": "/timeline/linear-odo/test-example-thumbnail.jpeg"
+        }
+      ],
       "links": []
     },
     {
       "id": "open-swerve",
-      "type": "project",
-      "order": 24,
+      "order": 120,
       "visible": true,
+      "type": "project",
       "title": "Open Swerve",
       "startDate": "2022-06",
       "endDate": "2023-01",
@@ -269,7 +376,21 @@
         "Onshape",
         "3D Printing"
       ],
-      "media": [],
+      "media": [
+        {
+          "src": "/timeline/open-swerve/thumbnail.jpg",
+          "alt": "Open swerve drive module",
+          "type": "image",
+          "featured": true
+        },
+        {
+          "src": "/timeline/open-swerve/example.mp4",
+          "alt": "Swerve drive demonstration",
+          "caption": "Drive demonstration",
+          "type": "video",
+          "poster": "/timeline/open-swerve/example-thumbnail.jpeg"
+        }
+      ],
       "links": []
     }
   ]

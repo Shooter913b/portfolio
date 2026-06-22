@@ -12,8 +12,8 @@ export const blogFrontmatterSchema = z.object({
   tags: z.array(z.string()).optional().default([]),
   media: z.array(timelineMediaItemSchema).optional().default([]),
   links: z.array(timelineLinkSchema).optional().default([]),
-  /** Timeline entry id this post relates to */
-  relatedTimeline: z.string().optional(),
+  /** Timeline entry ids this post relates to (experience, education, or project). */
+  relatedTimeline: z.array(z.string()).optional().default([]),
 });
 
 export type BlogFrontmatter = z.infer<typeof blogFrontmatterSchema>;

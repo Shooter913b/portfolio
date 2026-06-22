@@ -1,4 +1,5 @@
 import type { NarrativeEntry } from "@/lib/schemas/timeline";
+import { cn } from "@/lib/cn";
 import { TimelineBody } from "./TimelineBody";
 import { TimelineDetailHeader } from "./TimelineDetailHeader";
 import { TimelineLinks } from "./TimelineLinks";
@@ -34,11 +35,10 @@ export function EducationDetail({ entry, titleId }: EducationDetailProps) {
             {images.map((item, index) => (
               <div
                 key={item.src}
-                className={
-                  index === 0
-                    ? "col-span-2 row-span-2 sm:col-span-2"
-                    : ""
-                }
+                className={cn(
+                  "min-h-0 min-w-0 overflow-hidden",
+                  index === 0 ? "col-span-2 row-span-2 sm:col-span-2" : ""
+                )}
               >
                 <TimelineMedia
                   item={item}

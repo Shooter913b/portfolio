@@ -50,24 +50,34 @@ export function TimelineEntry({ entry, site, index }: TimelineEntryProps) {
         className="timeline-dot absolute left-1/2 top-8 hidden h-3 w-3 rounded-full ring-4 ring-bg-base md:block"
         aria-hidden
       />
-      <div className="grid grid-cols-1 md:grid-cols-2 md:gap-12">
+      <div className="grid grid-cols-1 md:grid-cols-2 md:gap-16">
         {isNarrative ? (
-          <button
-            type="button"
+          <div
+            tabIndex={0}
             data-timeline-card
             data-timeline-side={isLeft ? "left" : "right"}
             className={cardClassName}
-            onClick={(event) =>
+            onClick={(event) => {
+              if ((event.target as HTMLElement).closest("[data-carousel-control]")) return;
               openOverlay(
                 entry.id,
                 isLeft ? "left" : "right",
                 event.currentTarget.getBoundingClientRect()
-              )
-            }
+              );
+            }}
+            onKeyDown={(event) => {
+              if (event.key !== "Enter" && event.key !== " ") return;
+              event.preventDefault();
+              openOverlay(
+                entry.id,
+                isLeft ? "left" : "right",
+                event.currentTarget.getBoundingClientRect()
+              );
+            }}
             aria-label={`View details for ${entry.title}`}
           >
             {content}
-          </button>
+          </div>
         ) : (
           <div
             data-timeline-card

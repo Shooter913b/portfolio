@@ -39,6 +39,10 @@ export async function getGitHubUser(
   return response.json() as Promise<{ login: string }>;
 }
 
+function isBinaryPath(filePath: string): boolean {
+  return /\.(pdf|jpe?g|png|gif|webp|mp4|mov|mjs)$/i.test(filePath);
+}
+
 export async function getFileFromGitHub(
   path: string,
   accessToken: string
@@ -56,7 +60,9 @@ export async function getFileFromGitHub(
   }
 
   const data = (await response.json()) as GitHubContentResponse;
-  const content = Buffer.from(data.content, "base64").toString("utf8");
+  const raw = Buffer.from(data.content, "base64");
+  // Never decode binary assets as UTF-8 — that corrupts PDFs and images.
+  const content = isBinaryPath(path) ? "" : raw.toString("utf8");
   return { content, sha: data.sha };
 }
 

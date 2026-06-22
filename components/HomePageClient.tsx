@@ -5,6 +5,7 @@ import type { Profile } from "@/lib/schemas/profile";
 import type { ResolvedTimelineEntry } from "@/lib/schemas/timeline";
 import type { BlogPost } from "@/lib/schemas/blog";
 import { HeroSection } from "@/components/hero/HeroSection";
+import { MobileDesktopNotice } from "@/components/hero/MobileDesktopNotice";
 import { TimelineSection } from "@/components/timeline/TimelineSection";
 
 type HomePageClientProps = {
@@ -25,6 +26,7 @@ export function HomePageClient({
   return (
     <main>
       <HeroSection site={site} profile={profile} featuredPosts={featuredPosts} />
+      <MobileDesktopNotice />
       <TimelineSection entries={timeline} site={site} posts={posts} />
     </main>
   );

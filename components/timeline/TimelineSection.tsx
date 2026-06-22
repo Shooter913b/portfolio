@@ -25,7 +25,7 @@ export function TimelineSection({ entries, site, posts }: TimelineSectionProps) 
       >
         <div className="pointer-events-none absolute left-1/2 top-0 hidden h-full w-0.5 -translate-x-1/2 bg-gradient-to-b from-accent-blue/50 via-accent-purple/40 to-accent-blue/50 md:block" />
         <TimelinePlane />
-        <div className="relative mx-auto flex max-w-4xl flex-col gap-16 md:gap-24">
+        <div className="relative mx-auto flex w-full max-w-7xl flex-col gap-16 md:gap-24">
           {entries.map((entry, index) =>
             entry.type === "skills" ? (
               <SkillsTimelineGroup key={entry.id} entry={entry} index={index} />

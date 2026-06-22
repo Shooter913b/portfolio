@@ -10,8 +10,17 @@ type ProjectDetailProps = {
   titleId: string;
 };
 
+function projectHeroMedia(entry: NarrativeEntry) {
+  const featured = entry.media.filter((item) => item.featured);
+  const heroCandidate = featured[0] ?? entry.media.find((item) => item.type === "image");
+  if (!heroCandidate) return { hero: undefined, gallery: entry.media };
+
+  const gallery = entry.media.filter((item) => item.src !== heroCandidate.src);
+  return { hero: heroCandidate, gallery };
+}
+
 export function ProjectDetail({ entry, titleId }: ProjectDetailProps) {
-  const [hero, ...gallery] = entry.media;
+  const { hero, gallery } = projectHeroMedia(entry);
   const hasLinks = entry.links.length > 0;
 
   return (
@@ -21,10 +30,17 @@ export function ProjectDetail({ entry, titleId }: ProjectDetailProps) {
       {hero && <TimelineMedia item={hero} variant="hero" />}
 
       {gallery.length > 0 && (
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-          {gallery.map((item) => (
-            <TimelineMedia key={item.src} item={item} variant="gallery" />
-          ))}
+        <div>
+          <SectionLabel>Gallery</SectionLabel>
+          <div className="space-y-4">
+            {gallery.map((item) => (
+              <TimelineMedia
+                key={item.src}
+                item={item}
+                variant={item.type === "image" ? "gallery" : "stack"}
+              />
+            ))}
+          </div>
         </div>
       )}
 

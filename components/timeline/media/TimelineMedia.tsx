@@ -18,23 +18,27 @@ export function TimelineMedia({
   className,
 }: TimelineMediaProps) {
   const aspect = fill
-    ? "h-full"
+    ? "h-full w-full"
     : variant === "hero"
-      ? "aspect-video"
+      ? "aspect-video w-full"
       : variant === "gallery"
-        ? "aspect-[4/3]"
-        : "aspect-video";
+        ? "aspect-[4/3] w-full"
+        : "aspect-video w-full";
 
   return (
-    <figure className={cn("group", className)}>
+    <figure className={cn("group w-full", className)}>
       <div
         className={cn(
-          "relative h-full overflow-hidden rounded-xl border border-white/10 bg-bg-subtle ring-1 ring-white/5 transition-all duration-300 group-hover:border-accent-blue/30 group-hover:ring-accent-blue/20",
+          "relative overflow-hidden rounded-xl border border-white/10 bg-bg-subtle ring-1 ring-white/5 transition-all duration-300 group-hover:border-accent-blue/30 group-hover:ring-accent-blue/20",
           aspect
         )}
       >
         {item.type === "youtube" ? (
-          <YouTubeEmbed src={item.src} title={item.alt ?? item.caption ?? "YouTube video"} />
+          <YouTubeEmbed
+            src={item.src}
+            title={item.alt ?? item.caption ?? "YouTube video"}
+            className="absolute inset-0 h-full w-full"
+          />
         ) : item.type === "video" ? (
           <video
             src={item.src}
@@ -42,7 +46,7 @@ export function TimelineMedia({
             controls
             playsInline
             preload="metadata"
-            className="h-full w-full object-cover"
+            className="absolute inset-0 h-full w-full object-cover"
           />
         ) : (
           <Image

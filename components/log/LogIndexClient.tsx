@@ -3,6 +3,7 @@
 import { useSearchParams } from "next/navigation";
 import type { BlogPost } from "@/lib/schemas/blog";
 import type { PostTimelineRef } from "@/lib/log/timelineLabels";
+import { postRelatesToTimelineEntry } from "@/lib/log/relatedTimeline";
 import { FlightLogBoard } from "./FlightLogBoard";
 import { LogFilterDropdown } from "./LogFilterDropdown";
 
@@ -17,7 +18,7 @@ export function LogIndexClient({ posts, filterOptions }: LogIndexClientProps) {
   const activeFilter = filterOptions.find((option) => option.id === relatedId);
 
   const filteredPosts = relatedId
-    ? posts.filter((post) => post.relatedTimeline === relatedId)
+    ? posts.filter((post) => postRelatesToTimelineEntry(post, relatedId))
     : posts;
 
   return (

@@ -8,10 +8,10 @@ import { LogPostPanel } from "./LogPostPanel";
 
 type LogPostHeaderProps = {
   post: BlogPost;
-  timelineRef?: PostTimelineRef;
+  timelineRefs?: PostTimelineRef[];
 };
 
-export function LogPostHeader({ post, timelineRef }: LogPostHeaderProps) {
+export function LogPostHeader({ post, timelineRefs = [] }: LogPostHeaderProps) {
   return (
     <LogPostPanel className="relative">
       <div className="pointer-events-none absolute inset-0 accent-gradient-soft-bg opacity-35" />
@@ -38,9 +38,16 @@ export function LogPostHeader({ post, timelineRef }: LogPostHeaderProps) {
           </div>
         )}
 
-        {timelineRef && (
+        {timelineRefs.length > 0 && (
           <div className="mt-6 border-t border-white/5 pt-6">
-            <LogTimelineLink timelineRef={timelineRef} />
+            <p className="mb-3 font-mono text-[10px] uppercase tracking-wider text-text-muted">
+              Related timeline
+            </p>
+            <div className="flex flex-wrap gap-2.5">
+              {timelineRefs.map((timelineRef) => (
+                <LogTimelineLink key={timelineRef.id} timelineRef={timelineRef} />
+              ))}
+            </div>
           </div>
         )}
 

@@ -19,7 +19,7 @@ export function ResumeBlock({ site }: ResumeBlockProps) {
         Last updated {site.resume.lastUpdated}
       </p>
       <div className="mt-4 overflow-hidden rounded-lg border border-white/10">
-        <ResumePreview src={site.resume.pdfPath} />
+        <ResumePreview src={site.resume.pdfPath} cacheKey={site.resume.lastUpdated} />
       </div>
       <div className="mt-4 flex flex-wrap gap-3">
         <ButtonLink

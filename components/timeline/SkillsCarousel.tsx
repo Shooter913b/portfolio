@@ -71,7 +71,7 @@ export function SkillsCarousel({
         aria-hidden
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 md:gap-12">
+      <div className="grid grid-cols-1 md:grid-cols-2 md:gap-16">
         <div
           data-timeline-card
           data-timeline-side={isLeft ? "left" : "right"}

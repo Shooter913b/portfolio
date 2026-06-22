@@ -6,6 +6,7 @@ import type { BlogFrontmatter } from "@/lib/schemas/blog";
 import type { Profile } from "@/lib/schemas/profile";
 import type { Site } from "@/lib/schemas/site";
 import type { SkillCategory } from "@/lib/schemas/skills";
+import { PdfCanvasPreview } from "@/components/media/PdfCanvasPreview";
 import type { TimelineEntry } from "@/lib/schemas/timeline";
 import type { TimelineLink, TimelineMediaItem } from "@/lib/schemas/timeline-media";
 import { getFeaturedPostMedia, getSupplementaryPostMedia } from "@/lib/log/postMedia";
@@ -256,15 +257,22 @@ export function ProfilePreview({ data }: { data: Profile }) {
   );
 }
 
-export function ResumePreview({ pdfPath = "/resume.pdf" }: { pdfPath?: string }) {
+export function ResumePreview({
+  pdfPath = "/resume.pdf",
+  cacheKey,
+}: {
+  pdfPath?: string;
+  cacheKey?: string;
+}) {
   return (
     <PreviewRoot>
       <PreviewSection title="PDF preview">
-        <div className="overflow-hidden rounded-lg border border-white/10 bg-[#1a1a24]">
-          <iframe
+        <div className="overflow-hidden rounded-lg border border-white/10">
+          <PdfCanvasPreview
             src={pdfPath}
+            cacheKey={cacheKey}
             title="Resume preview"
-            className="h-[min(70vh,520px)] w-full bg-white"
+            className="h-[min(70vh,520px)]"
           />
         </div>
         <PreviewRow label="Path" value={pdfPath} />
@@ -418,7 +426,15 @@ export function LogPostPreview({
         <PreviewText className="text-lg font-semibold">{frontmatter.title}</PreviewText>
         <PreviewRow label="Date" value={frontmatter.date} />
         <PreviewRow label="Featured" value={frontmatter.featured ? "Yes" : "No"} />
-        <PreviewRow label="Timeline" value={timelineLabel ?? frontmatter.relatedTimeline ?? "None"} />
+        <PreviewRow
+          label="Timeline"
+          value={
+            timelineLabel ??
+            (frontmatter.relatedTimeline.length > 0
+              ? frontmatter.relatedTimeline.join(", ")
+              : "None")
+          }
+        />
         {frontmatter.excerpt && <PreviewText muted>{frontmatter.excerpt}</PreviewText>}
         <PreviewBadgeList items={frontmatter.tags ?? []} />
       </PreviewSection>

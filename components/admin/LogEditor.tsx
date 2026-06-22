@@ -11,6 +11,7 @@ import {
   listBlogPosts,
   saveContent,
 } from "@/lib/admin/client";
+import { RelatedTimelineEditor } from "./RelatedTimelineEditor";
 import { TimelineMediaEditor } from "./TimelineMediaEditor";
 import { LinksEditor } from "./LinksEditor";
 import {
@@ -95,9 +96,14 @@ export function LogEditor() {
 
   if (error) return <p className="text-red-400">{error}</p>;
 
-  const relatedEntry = payload?.frontmatter.relatedTimeline
-    ? timelineEntries.find((e) => e.id === payload.frontmatter.relatedTimeline)
-    : undefined;
+  const relatedTimelineLabels = payload
+    ? payload.frontmatter.relatedTimeline
+        .map((id) => {
+          const entry = timelineEntries.find((item) => item.id === id);
+          return entry ? `${timelineOptionLabel(entry)} (${id})` : id;
+        })
+        .join(", ")
+    : "";
 
   const save = async () => {
     if (!selectedPath || !payload) return;
@@ -127,6 +133,7 @@ export function LogEditor() {
         tags: [],
         media: [],
         links: [],
+        relatedTimeline: [],
       },
       body: "Write your post here.\n",
     };
@@ -197,11 +204,7 @@ export function LogEditor() {
             <LogPostPreview
               frontmatter={payload.frontmatter}
               body={payload.body}
-              timelineLabel={
-                relatedEntry
-                  ? `${timelineOptionLabel(relatedEntry)} (${relatedEntry.id})`
-                  : payload.frontmatter.relatedTimeline
-              }
+              timelineLabel={relatedTimelineLabels || undefined}
             />
           }
         >
@@ -250,26 +253,20 @@ export function LogEditor() {
               })
             }
           />
-          <Field label="Related timeline entry">
-            <SelectInput
-              value={payload.frontmatter.relatedTimeline ?? ""}
-              onChange={(e) =>
+          <Field
+            label="Related timeline entries"
+            hint="Link this post to one or more experience, education, or project entries."
+          >
+            <RelatedTimelineEditor
+              value={payload.frontmatter.relatedTimeline ?? []}
+              entries={timelineEntries}
+              onChange={(relatedTimeline) =>
                 setPayload({
                   ...payload,
-                  frontmatter: {
-                    ...payload.frontmatter,
-                    relatedTimeline: e.target.value || undefined,
-                  },
+                  frontmatter: { ...payload.frontmatter, relatedTimeline },
                 })
               }
-            >
-              <option value="">None</option>
-              {timelineEntries.map((entry) => (
-                <option key={entry.id} value={entry.id}>
-                  {timelineOptionLabel(entry)} ({entry.id})
-                </option>
-              ))}
-            </SelectInput>
+            />
           </Field>
           <Field label="Tags">
             <StringListEditor

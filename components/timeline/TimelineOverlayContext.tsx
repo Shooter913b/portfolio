@@ -10,6 +10,7 @@ import {
 } from "react";
 import type { BlogPost } from "@/lib/schemas/blog";
 import type { NarrativeEntry } from "@/lib/schemas/timeline";
+import { postRelatesToTimelineEntry } from "@/lib/log/relatedTimeline";
 import { TimelineDetailOverlay } from "./TimelineDetailOverlay";
 import { TimelineDeepLink } from "./TimelineDeepLink";
 
@@ -77,7 +78,7 @@ export function TimelineOverlayProvider({
 
   const relatedPosts = useMemo(() => {
     if (!activeEntry) return [];
-    return posts.filter((post) => post.relatedTimeline === activeEntry.id);
+    return posts.filter((post) => postRelatesToTimelineEntry(post, activeEntry.id));
   }, [activeEntry, posts]);
 
   const value = useMemo(

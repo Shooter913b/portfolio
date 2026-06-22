@@ -43,7 +43,7 @@ function FeaturedPreview({
         "relative shrink-0 overflow-hidden rounded-lg border border-white/10 bg-bg-subtle",
         variant === "banner" && "aspect-[2/1] w-full",
         variant === "thumb" && "aspect-[5/3] w-full",
-        variant === "inline" && "h-16 w-16"
+        variant === "inline" && "aspect-[5/3] w-full"
       )}
     >
       {previewSrc ? (
@@ -53,7 +53,9 @@ function FeaturedPreview({
           fill
           className="object-cover"
           sizes={
-            variant === "inline" ? "64px" : "(max-width: 768px) 100vw, 320px"
+            variant === "inline"
+              ? "(max-width: 1024px) 100vw, 224px"
+              : "(max-width: 768px) 100vw, 320px"
           }
         />
       ) : (
@@ -116,6 +118,7 @@ export function TimelineCardFeatured({
                 key={`${entry.src}-${i}`}
                 type="button"
                 role="tab"
+                data-carousel-control
                 aria-selected={i === index}
                 aria-label={`Show featured media ${i + 1}`}
                 className={cn(
@@ -124,7 +127,10 @@ export function TimelineCardFeatured({
                     ? "carousel-indicator-active w-5"
                     : "w-1.5 bg-bg-subtle hover:bg-text-muted"
                 )}
-                onClick={() => setIndex(i)}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setIndex(i);
+                }}
               />
             ))}
           </div>
