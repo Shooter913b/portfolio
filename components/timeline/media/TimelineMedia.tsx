@@ -20,7 +20,7 @@ function imageMaxHeight(variant: "hero" | "gallery" | "stack") {
     case "hero":
       return "max-h-[min(70vh,720px)]";
     case "gallery":
-      return "max-h-[min(55vh,520px)]";
+      return "max-h-48";
     default:
       return "max-h-[min(65vh,640px)]";
   }

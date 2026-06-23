@@ -1,5 +1,5 @@
 import type { TimelineMediaItem } from "@/lib/schemas/timeline-media";
-import { TimelineMedia } from "@/components/timeline/media/TimelineMedia";
+import { MediaCollage } from "@/components/media/MediaCollage";
 import { LogPostPanel } from "./LogPostPanel";
 
 type LogPostGalleryProps = {
@@ -11,11 +11,7 @@ export function LogPostGallery({ items }: LogPostGalleryProps) {
 
   return (
     <LogPostPanel label="Gallery">
-      <div className="space-y-4">
-        {items.map((item, index) => (
-          <TimelineMedia key={`${item.src}-${index}`} item={item} variant="stack" />
-        ))}
-      </div>
+      <MediaCollage items={items} />
     </LogPostPanel>
   );
 }

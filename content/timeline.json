@@ -186,8 +186,21 @@
         "Hardware",
         "CAD"
       ],
-      "media": [],
-      "links": []
+      "media": [
+        {
+          "src": "/timeline/princeton-apex/apex-logo-1782223184392.webp",
+          "alt": "Apex Logo",
+          "type": "image",
+          "featured": true
+        }
+      ],
+      "links": [
+        {
+          "label": "Website",
+          "href": "https://princetonapexlabs.com/",
+          "icon": "external"
+        }
+      ]
     },
     {
       "id": "uw-education",
@@ -204,7 +217,14 @@
         "GPA: 4.0/4.0"
       ],
       "tags": [],
-      "media": [],
+      "media": [
+        {
+          "src": "/timeline/uw-education/uw-madison-logo-1782223290721.jpg",
+          "alt": "UW-Madison logo",
+          "type": "image",
+          "featured": true
+        }
+      ],
       "links": []
     },
     {

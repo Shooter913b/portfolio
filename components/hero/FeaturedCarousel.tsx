@@ -1,13 +1,16 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import type { BlogPost } from "@/lib/schemas/blog";
 import { getFeaturedPostMedia } from "@/lib/log/postMedia";
 import { formatDisplayDate } from "@/lib/dates";
 import { cn } from "@/lib/cn";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { MediaCarouselControls } from "@/components/media/MediaCarouselControls";
 import { TimelineCardFeatured } from "@/components/timeline/TimelineCardFeatured";
+
+const SLIDE_INTERVAL_MS = 5000;
 
 type FeaturedCarouselProps = {
   posts: BlogPost[];
@@ -16,23 +19,52 @@ type FeaturedCarouselProps = {
 
 export function FeaturedCarousel({ posts, className }: FeaturedCarouselProps) {
   const reducedMotion = useReducedMotion();
-  const [index, setIndex] = useState(0);
+  const [postIndex, setPostIndex] = useState(0);
+  const [mediaIndex, setMediaIndex] = useState(0);
   const [paused, setPaused] = useState(false);
+  const stateRef = useRef({ postIndex: 0, mediaIndex: 0 });
 
-  const next = useCallback(() => {
-    setIndex((i) => (i + 1) % posts.length);
-  }, [posts.length]);
+  stateRef.current = { postIndex, mediaIndex };
+
+  const post = posts[postIndex];
+  const featuredMedia = post ? getFeaturedPostMedia(post) : [];
+  const safeMediaIndex =
+    featuredMedia.length > 0
+      ? Math.min(mediaIndex, featuredMedia.length - 1)
+      : 0;
 
   useEffect(() => {
-    if (posts.length <= 1 || paused || reducedMotion) return;
-    const id = window.setInterval(next, 6000);
+    setMediaIndex(0);
+  }, [postIndex]);
+
+  const advanceSlide = useCallback(() => {
+    const { postIndex: currentPostIndex, mediaIndex: currentMediaIndex } = stateRef.current;
+    const currentPost = posts[currentPostIndex];
+    if (!currentPost) return;
+
+    const media = getFeaturedPostMedia(currentPost);
+    if (media.length > 1 && currentMediaIndex < media.length - 1) {
+      setMediaIndex(currentMediaIndex + 1);
+      return;
+    }
+
+    setMediaIndex(0);
+    if (posts.length > 1) {
+      setPostIndex((currentPostIndex + 1) % posts.length);
+    }
+  }, [posts]);
+
+  const hasMultipleSlides =
+    featuredMedia.length > 1 || posts.length > 1;
+  const autoPlaying = hasMultipleSlides && !paused && !reducedMotion;
+
+  useEffect(() => {
+    if (!autoPlaying) return;
+    const id = window.setInterval(advanceSlide, SLIDE_INTERVAL_MS);
     return () => window.clearInterval(id);
-  }, [posts.length, paused, reducedMotion, next]);
+  }, [autoPlaying, advanceSlide, postIndex, featuredMedia.length]);
 
   if (posts.length === 0) return null;
-
-  const post = posts[index];
-  const featuredMedia = getFeaturedPostMedia(post);
 
   return (
     <div
@@ -43,48 +75,53 @@ export function FeaturedCarousel({ posts, className }: FeaturedCarouselProps) {
       <p className="mb-3 font-mono text-xs uppercase tracking-widest text-text-muted">
         Featured
       </p>
-      <article className="overflow-hidden rounded-xl border border-white/5 bg-bg-elevated transition-all hover-accent-glow-sm hover:border-white/10">
-        {featuredMedia.length > 0 && (
-          <div className="border-b border-white/5 [&_figure]:rounded-none [&_div]:rounded-none">
-            <TimelineCardFeatured items={featuredMedia} variant="banner" />
+
+      <Link
+        href={`/log/${post.slug}`}
+        className="block overflow-hidden rounded-xl border border-white/5 bg-bg-elevated transition-all hover-accent-glow-sm hover:border-white/10"
+      >
+        <article>
+          {featuredMedia.length > 0 && (
+            <div className="border-b border-white/5 [&_figure]:rounded-none [&_div]:rounded-none">
+              <TimelineCardFeatured
+                items={featuredMedia}
+                variant="banner"
+                activeIndex={safeMediaIndex}
+                onActiveIndexChange={setMediaIndex}
+                intervalMs={SLIDE_INTERVAL_MS}
+                showAutoProgress={autoPlaying}
+              />
+            </div>
+          )}
+          <div className="p-5">
+            <time className="font-mono text-xs text-text-muted">
+              {formatDisplayDate(post.date)}
+            </time>
+            <h3 className="mt-2 font-display text-lg font-medium text-text-primary">
+              {post.title}
+            </h3>
+            <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-text-muted">
+              {post.excerpt ?? post.content.slice(0, 140).trim()}
+              {(post.excerpt ?? post.content).length > 140 ? "…" : ""}
+            </p>
+            <span className="mt-4 inline-block text-sm text-accent-blue">
+              Read more →
+            </span>
           </div>
-        )}
-        <div className="p-5">
-          <time className="font-mono text-xs text-text-muted">
-            {formatDisplayDate(post.date)}
-          </time>
-          <h3 className="mt-2 font-display text-lg font-medium text-text-primary">
-            {post.title}
-          </h3>
-          <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-text-muted">
-            {post.excerpt ?? post.content.slice(0, 140).trim()}
-            {(post.excerpt ?? post.content).length > 140 ? "…" : ""}
-          </p>
-          <Link
-            href={`/log/${post.slug}`}
-            className="mt-4 inline-block text-sm text-accent-blue transition-opacity hover:opacity-80"
-          >
-            Read more →
-          </Link>
-        </div>
-      </article>
+        </article>
+      </Link>
+
       {posts.length > 1 && (
-        <div className="mt-3 flex gap-2" role="tablist" aria-label="Featured posts">
-          {posts.map((p, i) => (
-            <button
-              key={p.slug}
-              type="button"
-              role="tab"
-              aria-selected={i === index}
-              aria-label={`Show ${p.title}`}
-              className={cn(
-                "h-1.5 rounded-full transition-all",
-                i === index ? "carousel-indicator-active w-6" : "w-1.5 bg-bg-subtle hover:bg-text-muted"
-              )}
-              onClick={() => setIndex(i)}
-            />
-          ))}
-        </div>
+        <MediaCarouselControls
+          count={posts.length}
+          index={postIndex}
+          onIndexChange={setPostIndex}
+          autoPlay={autoPlaying}
+          intervalMs={SLIDE_INTERVAL_MS}
+          showCounter
+          label="Featured posts"
+          className="mt-3"
+        />
       )}
     </div>
   );

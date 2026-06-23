@@ -1,11 +1,15 @@
 "use client";
 
+"use client";
+
 import type { NarrativeEntry } from "@/lib/schemas/timeline";
+import { splitDetailMedia } from "@/lib/timeline/featuredMedia";
 import { TimelineBody } from "./TimelineBody";
 import { TimelineDetailHeader } from "./TimelineDetailHeader";
 import { TimelineLinks } from "./TimelineLinks";
 import { SectionLabel } from "./SectionLabel";
-import { TimelineMedia } from "../media/TimelineMedia";
+import { MediaCollage } from "@/components/media/MediaCollage";
+import { DetailFeaturedMedia } from "../media/DetailFeaturedMedia";
 import { TimelineRelatedExperiences } from "./TimelineRelatedExperiences";
 import { useTimelineEntries } from "../TimelineOverlayContext";
 import { resolveProjectExperienceRefs } from "@/lib/timeline/relatedExperience";
@@ -15,18 +19,9 @@ type ProjectDetailProps = {
   titleId: string;
 };
 
-function projectHeroMedia(entry: NarrativeEntry) {
-  const featured = entry.media.filter((item) => item.featured);
-  const heroCandidate = featured[0] ?? entry.media.find((item) => item.type === "image");
-  if (!heroCandidate) return { hero: undefined, gallery: entry.media };
-
-  const gallery = entry.media.filter((item) => item.src !== heroCandidate.src);
-  return { hero: heroCandidate, gallery };
-}
-
 export function ProjectDetail({ entry, titleId }: ProjectDetailProps) {
   const allEntries = useTimelineEntries();
-  const { hero, gallery } = projectHeroMedia(entry);
+  const { featured, gallery } = splitDetailMedia(entry.media);
   const hasLinks = entry.links.length > 0;
   const relatedExperiences =
     entry.type === "project"
@@ -37,20 +32,12 @@ export function ProjectDetail({ entry, titleId }: ProjectDetailProps) {
     <div className="space-y-8">
       <TimelineDetailHeader entry={entry} titleId={titleId} />
 
-      {hero && <TimelineMedia item={hero} variant="hero" />}
+      <DetailFeaturedMedia items={featured} label="Featured project media" />
 
       {gallery.length > 0 && (
         <div>
           <SectionLabel>Gallery</SectionLabel>
-          <div className="space-y-4">
-            {gallery.map((item) => (
-              <TimelineMedia
-                key={item.src}
-                item={item}
-                variant={item.type === "image" ? "gallery" : "stack"}
-              />
-            ))}
-          </div>
+          <MediaCollage items={gallery} />
         </div>
       )}
 

@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import type { TimelineMediaItem } from "@/lib/schemas/timeline-media";
 import { ImageLightbox } from "@/components/media/ImageLightbox";
+import { MediaCarouselControls } from "@/components/media/MediaCarouselControls";
 import {
   getMediaPreviewSrc,
   isPlayableMedia,
@@ -11,11 +12,22 @@ import {
 import { cn } from "@/lib/cn";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
+const AUTO_INTERVAL_MS = 5000;
+
 type TimelineCardFeaturedProps = {
   items: TimelineMediaItem[];
   variant: "banner" | "inline" | "thumb";
   className?: string;
   compactControls?: boolean;
+  /** When set, autoplay and index state are managed by the parent. */
+  activeIndex?: number;
+  onActiveIndexChange?: (index: number) => void;
+  /** Autoplay when uncontrolled. Ignored when `activeIndex` is provided. */
+  autoPlay?: boolean;
+  /** Slide duration for progress indicators (ms). */
+  intervalMs?: number;
+  /** Show animated progress on the active dot. */
+  showAutoProgress?: boolean;
 };
 
 function PlayOverlay() {
@@ -98,79 +110,99 @@ export function TimelineCardFeatured({
   variant,
   className,
   compactControls = false,
+  activeIndex,
+  onActiveIndexChange,
+  autoPlay = true,
+  intervalMs = AUTO_INTERVAL_MS,
+  showAutoProgress,
 }: TimelineCardFeaturedProps) {
   const reducedMotion = useReducedMotion();
-  const [index, setIndex] = useState(0);
+  const [internalIndex, setInternalIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const [lightboxOpen, setLightboxOpen] = useState(false);
 
+  const isControlled = activeIndex !== undefined;
+  const index = isControlled ? activeIndex : internalIndex;
+
+  const setIndex = useCallback(
+    (next: number | ((current: number) => number)) => {
+      const apply = (current: number) => {
+        const resolved = typeof next === "function" ? next(current) : next;
+        return items.length > 0
+          ? ((resolved % items.length) + items.length) % items.length
+          : 0;
+      };
+
+      if (isControlled) {
+        onActiveIndexChange?.(apply(activeIndex ?? 0));
+      } else {
+        setInternalIndex((current) => apply(current));
+      }
+    },
+    [activeIndex, isControlled, items.length, onActiveIndexChange]
+  );
+
   const next = useCallback(() => {
-    setIndex((current) => (current + 1) % items.length);
-  }, [items.length]);
+    setIndex((current) => current + 1);
+  }, [setIndex]);
 
   useEffect(() => {
-    setIndex(0);
-  }, [items]);
+    if (!isControlled) {
+      setInternalIndex(0);
+    }
+  }, [items, isControlled]);
 
   useEffect(() => {
-    if (items.length <= 1 || paused || reducedMotion) return;
-    const id = window.setInterval(next, 5000);
+    if (isControlled || !autoPlay || items.length <= 1 || paused || reducedMotion) return;
+    const id = window.setInterval(next, AUTO_INTERVAL_MS);
     return () => window.clearInterval(id);
-  }, [items.length, paused, reducedMotion, next]);
+  }, [isControlled, autoPlay, items.length, paused, reducedMotion, next]);
+
+  const safeIndex =
+    items.length > 0 ? ((index % items.length) + items.length) % items.length : 0;
+
+  useEffect(() => {
+    if (isControlled && items.length > 0 && safeIndex !== activeIndex) {
+      onActiveIndexChange?.(safeIndex);
+    }
+  }, [isControlled, items.length, safeIndex, activeIndex, onActiveIndexChange]);
 
   if (items.length === 0) return null;
 
-  const item = items[index];
+  const item = items[safeIndex];
   const showControls = items.length > 1;
   const lightboxSrc = item.type === "image" ? item.src : null;
+  const progressEnabled =
+    showAutoProgress ?? (!isControlled && autoPlay && !paused && !reducedMotion);
 
   return (
-    <div
-      className={cn("group", className)}
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-    >
-      <FeaturedPreview
-        item={item}
-        variant={variant}
-        onExpandImage={lightboxSrc ? () => setLightboxOpen(true) : undefined}
-      />
+    <div className={cn("group", className)}>
+      <div
+        onMouseEnter={() => setPaused(true)}
+        onMouseLeave={() => setPaused(false)}
+      >
+        <FeaturedPreview
+          item={item}
+          variant={variant}
+          onExpandImage={lightboxSrc ? () => setLightboxOpen(true) : undefined}
+        />
+      </div>
 
       {showControls && (
-        <div
+        <MediaCarouselControls
+          count={items.length}
+          index={safeIndex}
+          onIndexChange={setIndex}
+          compact={compactControls}
+          showCounter={variant === "banner" && !compactControls}
+          label="Featured media"
+          autoPlay={progressEnabled}
+          intervalMs={intervalMs}
           className={cn(
-            compactControls ? "mt-1.5 flex justify-center" : "mt-2 flex items-center justify-between gap-2",
-            variant === "inline" && "flex-col"
+            compactControls ? "mt-1.5" : "mt-2 px-4 pb-3",
+            variant === "inline" && "w-full"
           )}
-        >
-          <div className="flex gap-1.5" role="tablist" aria-label="Featured media">
-            {items.map((entry, i) => (
-              <button
-                key={`${entry.src}-${i}`}
-                type="button"
-                role="tab"
-                data-carousel-control
-                aria-selected={i === index}
-                aria-label={`Show featured media ${i + 1}`}
-                className={cn(
-                  "h-1.5 rounded-full transition-all",
-                  i === index
-                    ? "carousel-indicator-active w-5"
-                    : "w-1.5 bg-bg-subtle hover:bg-text-muted"
-                )}
-                onClick={(event) => {
-                  event.stopPropagation();
-                  setIndex(i);
-                }}
-              />
-            ))}
-          </div>
-          {variant === "banner" && !compactControls && (
-            <span className="font-mono text-[10px] text-text-muted">
-              {index + 1}/{items.length}
-            </span>
-          )}
-        </div>
+        />
       )}
 
       {lightboxSrc && (

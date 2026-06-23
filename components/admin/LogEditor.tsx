@@ -30,7 +30,7 @@ import { fetchPostEngagement } from "@/lib/log/engagementClient";
 import { LOG_REACTIONS } from "@/lib/log/engagement";
 import { LogPostPreview } from "./AdminPreview";
 
-type PostFile = { name: string; path: string; slug: string };
+type PostFile = { name: string; path: string; slug: string; date: string };
 
 type PostPayload = {
   frontmatter: BlogFrontmatter;
@@ -38,6 +38,16 @@ type PostPayload = {
 };
 
 type TimelineData = { entries: TimelineEntry[] };
+
+function sortPostsByDate(files: PostFile[]): PostFile[] {
+  return [...files].sort(
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+  );
+}
+
+function formatPostOption(file: PostFile): string {
+  return file.date ? `${file.slug} · ${file.date}` : file.slug;
+}
 
 function timelineOptionLabel(entry: TimelineEntry): string {
   if (
@@ -92,8 +102,22 @@ export function LogEditor() {
 
   const loadFiles = useCallback(async () => {
     const result = await listBlogPosts();
-    setFiles(result.files);
-    setSelectedPath((current) => current ?? result.files[0]?.path ?? null);
+    const withDates = await Promise.all(
+      result.files.map(async (file) => {
+        try {
+          const content = await getContent<{ frontmatter: { date?: string } }>(file.path);
+          return {
+            ...file,
+            date: content.data.frontmatter.date ?? "",
+          };
+        } catch {
+          return { ...file, date: "" };
+        }
+      })
+    );
+    const sorted = sortPostsByDate(withDates);
+    setFiles(sorted);
+    setSelectedPath((current) => current ?? sorted[0]?.path ?? null);
   }, []);
 
   useEffect(() => {
@@ -205,7 +229,7 @@ export function LogEditor() {
           </option>
           {files.map((file) => (
             <option key={file.path} value={file.path}>
-              {file.slug}
+              {formatPostOption(file)}
             </option>
           ))}
         </SelectInput>

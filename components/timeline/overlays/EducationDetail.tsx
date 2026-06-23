@@ -1,10 +1,11 @@
 import type { NarrativeEntry } from "@/lib/schemas/timeline";
-import { cn } from "@/lib/cn";
+import { splitDetailMedia } from "@/lib/timeline/featuredMedia";
 import { TimelineBody } from "./TimelineBody";
 import { TimelineDetailHeader } from "./TimelineDetailHeader";
 import { TimelineLinks } from "./TimelineLinks";
 import { SectionLabel } from "./SectionLabel";
-import { TimelineMedia } from "../media/TimelineMedia";
+import { MediaCollage } from "@/components/media/MediaCollage";
+import { DetailFeaturedMedia } from "../media/DetailFeaturedMedia";
 
 type EducationDetailProps = {
   entry: NarrativeEntry;
@@ -12,7 +13,7 @@ type EducationDetailProps = {
 };
 
 export function EducationDetail({ entry, titleId }: EducationDetailProps) {
-  const images = entry.media.filter((item) => item.type === "image");
+  const { featured, gallery } = splitDetailMedia(entry.media);
   const hasLinks = entry.links.length > 0;
 
   return (
@@ -24,31 +25,12 @@ export function EducationDetail({ entry, titleId }: EducationDetailProps) {
         <TimelineBody body={entry.body} />
       </div>
 
-      {images.length === 1 && (
-        <TimelineMedia item={images[0]} variant="hero" />
-      )}
+      <DetailFeaturedMedia items={featured} label="Featured education media" />
 
-      {images.length > 1 && (
+      {gallery.length > 0 && (
         <div>
-          <SectionLabel>Collage</SectionLabel>
-          <div className="grid auto-rows-[140px] grid-cols-2 gap-3 sm:grid-cols-3">
-            {images.map((item, index) => (
-              <div
-                key={item.src}
-                className={cn(
-                  "min-h-0 min-w-0 overflow-hidden",
-                  index === 0 ? "col-span-2 row-span-2 sm:col-span-2" : ""
-                )}
-              >
-                <TimelineMedia
-                  item={item}
-                  variant="gallery"
-                  className="h-full"
-                  fill
-                />
-              </div>
-            ))}
-          </div>
+          <SectionLabel>Gallery</SectionLabel>
+          <MediaCollage items={gallery} />
         </div>
       )}
 
