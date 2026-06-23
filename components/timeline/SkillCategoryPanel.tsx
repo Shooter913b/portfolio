@@ -24,9 +24,14 @@ export function SkillCategoryPanel({ category }: SkillCategoryPanelProps) {
 
   return (
     <section aria-label={category.label}>
-      <h3 className="font-display text-lg font-medium text-text-primary">
-        {category.label}
-      </h3>
+      <div className="flex items-baseline justify-between gap-4">
+        <h3 className="font-display text-lg font-medium text-text-primary">
+          {category.label}
+        </h3>
+        <p className="shrink-0 font-mono text-[10px] uppercase tracking-wider text-text-muted">
+          Proficiency
+        </p>
+      </div>
       <ul className="mt-4 space-y-3">
         {skills.map(({ name, level }, skillIndex) => {
           const color = proficiencyColor(level);
