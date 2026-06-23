@@ -32,7 +32,14 @@
         "Simulation",
         "Hardware"
       ],
-      "media": [],
+      "media": [
+        {
+          "src": "/timeline/sbel-research/sebl-logo-1782234232231.jpg",
+          "alt": "SEBL Logo",
+          "type": "image",
+          "featured": true
+        }
+      ],
       "links": []
     },
     {
