@@ -13,7 +13,6 @@ import {
   blobGetAllEngagement,
   blobGetPostEngagement,
   blobRecordView,
-  setBlobRuntimeSiteId,
 } from "../../lib/log/engagementStore";
 
 type EngagementBody = {
@@ -23,10 +22,12 @@ type EngagementBody = {
   delta?: 1 | -1;
 };
 
+const NO_STORE = { "Cache-Control": "no-store" };
+
 function jsonResponse(status: number, data: unknown): Response {
   return new Response(JSON.stringify(data), {
     status,
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", ...NO_STORE },
   });
 }
 
@@ -37,7 +38,7 @@ function handlerResultToResponse(result: {
 }): Response {
   return new Response(result.body, {
     status: result.statusCode,
-    headers: result.headers,
+    headers: { ...result.headers, ...NO_STORE },
   });
 }
 
@@ -91,12 +92,8 @@ async function handlePost(body: EngagementBody, useLocal: boolean): Promise<Resp
   return jsonResponse(400, { error: "Invalid action" });
 }
 
-export default async function handler(req: Request, context: Context): Promise<Response> {
+export default async function handler(req: Request, _context: Context): Promise<Response> {
   const useLocal = isAdminDevBypass();
-
-  if (!useLocal) {
-    setBlobRuntimeSiteId(context.site.id);
-  }
 
   try {
     const url = new URL(req.url);

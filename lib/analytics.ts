@@ -4,16 +4,20 @@ function trackGoatCounterEvent(path: string): void {
   const send = () => {
     const goatcounter = (
       window as Window & {
-        goatcounter?: { count: (opts: { path: string; event: boolean }) => void };
+        goatcounter?: {
+          count: (opts: { path: string; event: boolean; title?: string }) => void;
+        };
       }
     ).goatcounter;
-    goatcounter?.count({ path, event: true });
+    goatcounter?.count({ path, title: path, event: true });
   };
 
   if (
     (
       window as Window & {
-        goatcounter?: { count: (opts: { path: string; event: boolean }) => void };
+        goatcounter?: {
+          count: (opts: { path: string; event: boolean; title?: string }) => void;
+        };
       }
     ).goatcounter?.count
   ) {
@@ -26,7 +30,9 @@ function trackGoatCounterEvent(path: string): void {
     attempts += 1;
     const goatcounter = (
       window as Window & {
-        goatcounter?: { count: (opts: { path: string; event: boolean }) => void };
+        goatcounter?: {
+          count: (opts: { path: string; event: boolean; title?: string }) => void;
+        };
       }
     ).goatcounter;
     if (goatcounter?.count) {

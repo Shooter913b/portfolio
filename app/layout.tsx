@@ -1,8 +1,12 @@
 import { Space_Grotesk, DM_Sans, JetBrains_Mono } from "next/font/google";
 import type { Metadata } from "next";
+import Script from "next/script";
 import { getSite } from "@/lib/content/getSite";
+import { goatCounterEndpoint } from "@/components/analytics/GoatCounter";
 import { AppShell } from "@/components/layout/AppShell";
 import "./globals.css";
+
+const goatCounterSite = process.env.NEXT_PUBLIC_GOATCOUNTER_SITE?.trim();
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -46,6 +50,17 @@ export default function RootLayout({
       className={`${spaceGrotesk.variable} ${dmSans.variable} ${jetbrainsMono.variable}`}
     >
       <body className="antialiased" suppressHydrationWarning>
+        {goatCounterSite ? (
+          <Script
+            id="goatcounter"
+            strategy="beforeInteractive"
+            src="https://gc.zgo.at/count.js"
+            data-goatcounter={goatCounterEndpoint(goatCounterSite)}
+            {...(process.env.NODE_ENV === "development"
+              ? { "data-goatcounter-settings": JSON.stringify({ allow_local: true }) }
+              : {})}
+          />
+        ) : null}
         <AppShell>{children}</AppShell>
       </body>
     </html>

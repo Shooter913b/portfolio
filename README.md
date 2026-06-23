@@ -90,5 +90,5 @@ No official Git/API sync. Export a ZIP from Overleaf and replace the `.tex` loca
 2. Set `NEXT_PUBLIC_GOATCOUNTER_SITE` to that code only — e.g. `elfrick`, not a full URL.
 3. In **Netlify → Environment variables**, add the same key, then **redeploy** (public env vars are embedded at build time).
 4. Open your dashboard at `https://YOUR_CODE.goatcounter.com`.
-
-Log post **view counts** on the site use the `/api/log-engagement` function (Netlify Blobs). GoatCounter tracks visits separately in its dashboard.
+5. Under **Settings → Allowed domains**, add your site hostname (e.g. `elfrick.xyz`). Without this, counts from production are ignored.
+6. Custom events (resume download, timeline opens, log views) appear under **Events**, not the main pageview chart.
