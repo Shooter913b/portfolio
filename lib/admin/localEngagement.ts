@@ -6,7 +6,7 @@ import {
   normalizePostEngagement,
   type LogEngagementData,
   type PostEngagement,
-} from "@/lib/log/engagement";
+} from "../log/engagement";
 
 const ENGAGEMENT_PATH = "content/log-engagement.json";
 const ROOT = process.cwd();

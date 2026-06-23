@@ -2,7 +2,9 @@
   "posts": {
     "new-website": {
       "views": 2,
-      "reactions": {}
+      "reactions": {
+        "👍": 1
+      }
     }
   }
 }
