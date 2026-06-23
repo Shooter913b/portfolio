@@ -2,9 +2,11 @@ import { cn } from "@/lib/cn";
 
 type LogPostPanelProps = {
   label?: string;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   className?: string;
   contentClassName?: string;
+  /** Render only the labeled header strip (no content area). */
+  headerOnly?: boolean;
 };
 
 export function LogPostPanel({
@@ -12,6 +14,7 @@ export function LogPostPanel({
   children,
   className,
   contentClassName,
+  headerOnly = false,
 }: LogPostPanelProps) {
   return (
     <section
@@ -21,15 +24,22 @@ export function LogPostPanel({
       )}
     >
       {label && (
-        <div className="border-b border-white/5 px-6 py-4 sm:px-8">
+        <div
+          className={cn(
+            "px-6 py-4 sm:px-8",
+            !headerOnly && "border-b border-white/5"
+          )}
+        >
           <h2 className="font-mono text-[10px] uppercase tracking-[0.2em] text-text-muted">
             {label}
           </h2>
         </div>
       )}
-      <div className={cn("px-6 py-7 sm:px-8 sm:py-8", contentClassName)}>
-        {children}
-      </div>
+      {!headerOnly && children != null && (
+        <div className={cn("px-6 py-7 sm:px-8 sm:py-8", contentClassName)}>
+          {children}
+        </div>
+      )}
     </section>
   );
 }

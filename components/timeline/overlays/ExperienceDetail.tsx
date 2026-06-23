@@ -38,7 +38,7 @@ export function ExperienceDetail({ entry, titleId }: ExperienceDetailProps) {
         {hasGallery && (
           <div className="min-w-0">
             <SectionLabel>Gallery</SectionLabel>
-            <MediaCollage items={gallery} />
+            <MediaCollage items={gallery} size="compact" />
           </div>
         )}
       </div>

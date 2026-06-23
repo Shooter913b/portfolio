@@ -10,8 +10,9 @@ export function LogPostGallery({ items }: LogPostGalleryProps) {
   if (items.length === 0) return null;
 
   return (
-    <LogPostPanel label="Gallery">
-      <MediaCollage items={items} />
-    </LogPostPanel>
+    <section className="space-y-4">
+      <LogPostPanel label="Gallery" headerOnly />
+      <MediaCollage items={items} size="comfortable" bare />
+    </section>
   );
 }

@@ -1,7 +1,5 @@
 "use client";
 
-"use client";
-
 import type { NarrativeEntry } from "@/lib/schemas/timeline";
 import { splitDetailMedia } from "@/lib/timeline/featuredMedia";
 import { TimelineBody } from "./TimelineBody";

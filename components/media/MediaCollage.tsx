@@ -1,43 +1,50 @@
 import type { TimelineMediaItem } from "@/lib/schemas/timeline-media";
-import { TimelineMedia } from "@/components/timeline/media/TimelineMedia";
+import { collageGridClass, collageTileClass, type CollageSize } from "@/lib/media/collageLayout";
+import { GalleryTile } from "@/components/media/GalleryTile";
 import { cn } from "@/lib/cn";
 
 type MediaCollageProps = {
   items: TimelineMediaItem[];
   className?: string;
+  /** `compact` for timeline sidebars; `comfortable` for full-width sections. */
+  size?: CollageSize;
+  /** Omit the outer framed container — tiles sit directly on the page background. */
+  bare?: boolean;
 };
 
-export function MediaCollage({ items, className }: MediaCollageProps) {
+export function MediaCollage({
+  items,
+  className,
+  size = "comfortable",
+  bare = false,
+}: MediaCollageProps) {
   if (items.length === 0) return null;
 
-  if (items.length === 1) {
-    return (
-      <div className={cn("max-w-xs", className)}>
-        <div className="h-32 min-h-0 overflow-hidden rounded-lg sm:h-36">
-          <TimelineMedia item={items[0]} variant="gallery" fill className="h-full" />
-        </div>
-      </div>
-    );
+  const grid = (
+    <div className={collageGridClass(size)}>
+      {items.map((item, index) => (
+        <GalleryTile
+          key={`${item.src}-${index}`}
+          item={item}
+          priority={index === 0}
+          className={collageTileClass(items.length, index, size)}
+        />
+      ))}
+    </div>
+  );
+
+  if (bare) {
+    return <div className={className}>{grid}</div>;
   }
 
   return (
     <div
       className={cn(
-        "grid auto-rows-[6.5rem] grid-cols-2 gap-2 sm:auto-rows-[7.5rem] sm:grid-cols-3 sm:gap-2.5",
+        "rounded-2xl border border-white/5 bg-bg-base/35 p-2.5 sm:p-3",
         className
       )}
     >
-      {items.map((item, index) => (
-        <div
-          key={item.src}
-          className={cn(
-            "min-h-0 min-w-0 overflow-hidden rounded-lg",
-            index === 0 ? "col-span-2 row-span-2 sm:col-span-2" : ""
-          )}
-        >
-          <TimelineMedia item={item} variant="gallery" fill className="h-full" />
-        </div>
-      ))}
+      {grid}
     </div>
   );
 }
