@@ -158,6 +158,11 @@
           "label": "Youtube Channel",
           "href": "https://www.youtube.com/@TechnoManiacs16021/videos",
           "icon": "external"
+        },
+        {
+          "label": "Website",
+          "href": "https://technomaniacs.org/",
+          "icon": "external"
         }
       ]
     },
