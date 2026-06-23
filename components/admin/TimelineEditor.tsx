@@ -18,6 +18,7 @@ import {
   TextInput,
 } from "./AdminUi";
 import { TimelineEntryPreview } from "./AdminPreview";
+import { RelatedTimelineEditor } from "./RelatedTimelineEditor";
 
 type TimelineData = { entries: TimelineEntry[] };
 
@@ -42,7 +43,7 @@ function createNarrativeEntry(type: NarrativeType): Extract<TimelineEntry, { typ
   const now = new Date();
   const month = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
 
-  return {
+  const base = {
     id: `new-${type}-${Date.now()}`,
     type,
     order: 0,
@@ -58,6 +59,12 @@ function createNarrativeEntry(type: NarrativeType): Extract<TimelineEntry, { typ
     media: [],
     links: [],
   };
+
+  if (type === "project") {
+    return { ...base, type: "project", relatedExperience: [] };
+  }
+
+  return { ...base, type } as Extract<TimelineEntry, { type: NarrativeType }>;
 }
 
 function normalizeOrder(entries: TimelineEntry[]): TimelineEntry[] {
@@ -210,7 +217,7 @@ export function TimelineEditor() {
           <AdminPanel
             title={`Edit ${entry.type} — ${entry.id}`}
             previewLayout="bottom"
-            preview={<TimelineEntryPreview entry={entry} />}
+            preview={<TimelineEntryPreview entry={entry} allEntries={data.entries} />}
           >
             {!isStatic(entry) && (
               <div className="flex justify-end">
@@ -246,9 +253,16 @@ export function TimelineEditor() {
                     { value: "education", label: "Education" },
                     { value: "project", label: "Project" },
                   ]}
-                  onChange={(type) =>
-                    updateEntry({ type } as Partial<TimelineEntry>)
-                  }
+                  onChange={(type) => {
+                    if (type === "project" && entry.type !== "project") {
+                      updateEntry({
+                        type,
+                        relatedExperience: [],
+                      } as Partial<TimelineEntry>);
+                      return;
+                    }
+                    updateEntry({ type } as Partial<TimelineEntry>);
+                  }}
                 />
 
                 <Field label="Title">
@@ -324,6 +338,24 @@ export function TimelineEditor() {
                     addLabel="Add tag"
                   />
                 </Field>
+
+                {entry.type === "project" && (
+                  <Field
+                    label="Related experiences"
+                    hint="Link this project to one or more experience entries. Linked experiences appear as tags on the project card."
+                  >
+                    <RelatedTimelineEditor
+                      value={entry.relatedExperience ?? []}
+                      entries={data.entries}
+                      filterTypes={["experience"]}
+                      addLabel="Add experience…"
+                      emptyLabel="All experience entries are linked."
+                      onChange={(relatedExperience) =>
+                        updateEntry({ relatedExperience } as Partial<TimelineEntry>)
+                      }
+                    />
+                  </Field>
+                )}
 
                 <Field label="Links">
                   <LinksEditor

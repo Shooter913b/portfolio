@@ -7,6 +7,8 @@ import type { Profile } from "@/lib/schemas/profile";
 import type { Site } from "@/lib/schemas/site";
 import type { SkillCategory } from "@/lib/schemas/skills";
 import { PdfCanvasPreview } from "@/components/media/PdfCanvasPreview";
+import { LogPostBody } from "@/components/log/LogPostBody";
+import { LogEngagementStats } from "@/components/log/LogEngagementStats";
 import type { TimelineEntry } from "@/lib/schemas/timeline";
 import type { TimelineLink, TimelineMediaItem } from "@/lib/schemas/timeline-media";
 import { getFeaturedPostMedia, getSupplementaryPostMedia } from "@/lib/log/postMedia";
@@ -357,7 +359,13 @@ function isNarrative(entry: TimelineEntry): entry is NarrativeEntry {
   );
 }
 
-export function TimelineEntryPreview({ entry }: { entry: TimelineEntry }) {
+export function TimelineEntryPreview({
+  entry,
+  allEntries = [],
+}: {
+  entry: TimelineEntry;
+  allEntries?: TimelineEntry[];
+}) {
   if (!isNarrative(entry)) {
     return (
       <PreviewRoot>
@@ -373,6 +381,17 @@ export function TimelineEntryPreview({ entry }: { entry: TimelineEntry }) {
   }
 
   const featured = getFeaturedMedia(entry.media);
+  const relatedExperienceLabels =
+    entry.type === "project"
+      ? (entry.relatedExperience ?? [])
+          .map((id) => {
+            const linked = allEntries.find((item) => item.id === id);
+            return linked && linked.type === "experience"
+              ? `${linked.title} (${id})`
+              : id;
+          })
+          .join(", ")
+      : "";
 
   return (
     <PreviewRoot>
@@ -388,6 +407,9 @@ export function TimelineEntryPreview({ entry }: { entry: TimelineEntry }) {
         </PreviewText>
         <PreviewText>{entry.summary}</PreviewText>
         <PreviewBadgeList items={entry.tags} />
+        {relatedExperienceLabels && (
+          <PreviewRow label="Related experiences" value={relatedExperienceLabels} />
+        )}
         {featured.length > 0 && (
           <PreviewMediaGrid items={featured} featuredOnly />
         )}
@@ -412,10 +434,14 @@ export function LogPostPreview({
   frontmatter,
   body,
   timelineLabel,
+  engagementViews = null,
+  engagementReactions = {},
 }: {
   frontmatter: BlogFrontmatter;
   body: string;
   timelineLabel?: string;
+  engagementViews?: number | null;
+  engagementReactions?: Record<string, number>;
 }) {
   const featured = getFeaturedPostMedia({ ...frontmatter, slug: "", content: body });
   const gallery = getSupplementaryPostMedia({ ...frontmatter, slug: "", content: body });
@@ -439,6 +465,10 @@ export function LogPostPreview({
         <PreviewBadgeList items={frontmatter.tags ?? []} />
       </PreviewSection>
 
+      <PreviewSection title="Engagement">
+        <LogEngagementStats views={engagementViews} reactions={engagementReactions} />
+      </PreviewSection>
+
       {featured.length > 0 && (
         <PreviewSection title="Featured media (carousel)">
           <PreviewMediaGrid items={featured} />
@@ -446,9 +476,11 @@ export function LogPostPreview({
       )}
 
       <PreviewSection title="Body">
-        <PreviewText className="whitespace-pre-wrap">
-          {body.trim() || "No content yet."}
-        </PreviewText>
+        {body.trim() ? (
+          <LogPostBody content={body} />
+        ) : (
+          <PreviewText muted>No content yet.</PreviewText>
+        )}
       </PreviewSection>
 
       {gallery.length > 0 && (

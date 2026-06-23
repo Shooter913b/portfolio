@@ -1,19 +1,30 @@
 "use client";
 
-import type { NarrativeEntry, TimelineEntry } from "@/lib/schemas/timeline";
+import type {
+  EducationEntry,
+  ExperienceEntry,
+  ProjectEntry,
+  TimelineEntry,
+} from "@/lib/schemas/timeline";
 import { Button, EntryCard, SelectInput } from "./AdminUi";
+
+type NarrativeType = ExperienceEntry["type"] | EducationEntry["type"] | ProjectEntry["type"];
+type LinkableEntry = ExperienceEntry | EducationEntry | ProjectEntry;
 
 type RelatedTimelineEditorProps = {
   value: string[];
   entries: TimelineEntry[];
   onChange: (ids: string[]) => void;
+  filterTypes?: NarrativeType[];
+  addLabel?: string;
+  emptyLabel?: string;
 };
 
-function optionLabel(entry: NarrativeEntry): string {
+function optionLabel(entry: LinkableEntry): string {
   return `${entry.type}: ${entry.title} (${entry.id})`;
 }
 
-function isLinkableEntry(entry: TimelineEntry): entry is NarrativeEntry {
+function isLinkableEntry(entry: TimelineEntry): entry is LinkableEntry {
   return (
     entry.type === "experience" ||
     entry.type === "education" ||
@@ -25,8 +36,13 @@ export function RelatedTimelineEditor({
   value,
   entries,
   onChange,
+  filterTypes,
+  addLabel = "Add experience, education, or project…",
+  emptyLabel = "All narrative timeline entries are linked.",
 }: RelatedTimelineEditorProps) {
-  const narrativeEntries = entries.filter(isLinkableEntry);
+  const narrativeEntries = entries
+    .filter(isLinkableEntry)
+    .filter((entry) => !filterTypes || filterTypes.includes(entry.type));
   const available = narrativeEntries.filter((entry) => !value.includes(entry.id));
 
   const add = (id: string) => {
@@ -68,7 +84,7 @@ export function RelatedTimelineEditor({
               e.target.value = "";
             }}
           >
-            <option value="">Add experience, education, or project…</option>
+            <option value="">{addLabel}</option>
             {available.map((entry) => (
               <option key={entry.id} value={entry.id}>
                 {optionLabel(entry)}
@@ -78,7 +94,7 @@ export function RelatedTimelineEditor({
         </div>
       ) : (
         value.length > 0 && (
-          <p className="text-xs text-[#8888a0]">All narrative timeline entries are linked.</p>
+          <p className="text-xs text-[#8888a0]">{emptyLabel}</p>
         )
       )}
     </div>

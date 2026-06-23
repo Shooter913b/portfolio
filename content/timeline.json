@@ -87,7 +87,14 @@
         "EdTech",
         "Canvas"
       ],
-      "media": [],
+      "media": [
+        {
+          "src": "/timeline/ceete/img-2275-1782193597406.jpg",
+          "caption": "A picture of the CEETE Team!",
+          "type": "image",
+          "featured": true
+        }
+      ],
       "links": []
     },
     {
@@ -235,7 +242,8 @@
           "href": "https://bobabyte.org/",
           "icon": "external"
         }
-      ]
+      ],
+      "relatedExperience": []
     },
     {
       "id": "open-intake",
@@ -281,7 +289,10 @@
           "poster": "/timeline/open-intake/testing-thumbnail.jpeg"
         }
       ],
-      "links": []
+      "links": [],
+      "relatedExperience": [
+        "ftc-captain"
+      ]
     },
     {
       "id": "library-outreach",
@@ -312,7 +323,10 @@
           "featured": true
         }
       ],
-      "links": []
+      "links": [],
+      "relatedExperience": [
+        "ftc-captain"
+      ]
     },
     {
       "id": "linear-odo",
@@ -362,7 +376,10 @@
           "poster": "/timeline/linear-odo/test-example-thumbnail.jpeg"
         }
       ],
-      "links": []
+      "links": [],
+      "relatedExperience": [
+        "ftc-captain"
+      ]
     },
     {
       "id": "open-swerve",
@@ -398,7 +415,8 @@
           "poster": "/timeline/open-swerve/example-thumbnail.jpeg"
         }
       ],
-      "links": []
+      "links": [],
+      "relatedExperience": []
     }
   ]
 }

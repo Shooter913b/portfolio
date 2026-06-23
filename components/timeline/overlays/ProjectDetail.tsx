@@ -1,9 +1,14 @@
+"use client";
+
 import type { NarrativeEntry } from "@/lib/schemas/timeline";
 import { TimelineBody } from "./TimelineBody";
 import { TimelineDetailHeader } from "./TimelineDetailHeader";
 import { TimelineLinks } from "./TimelineLinks";
 import { SectionLabel } from "./SectionLabel";
 import { TimelineMedia } from "../media/TimelineMedia";
+import { TimelineRelatedExperiences } from "./TimelineRelatedExperiences";
+import { useTimelineEntries } from "../TimelineOverlayContext";
+import { resolveProjectExperienceRefs } from "@/lib/timeline/relatedExperience";
 
 type ProjectDetailProps = {
   entry: NarrativeEntry;
@@ -20,8 +25,13 @@ function projectHeroMedia(entry: NarrativeEntry) {
 }
 
 export function ProjectDetail({ entry, titleId }: ProjectDetailProps) {
+  const allEntries = useTimelineEntries();
   const { hero, gallery } = projectHeroMedia(entry);
   const hasLinks = entry.links.length > 0;
+  const relatedExperiences =
+    entry.type === "project"
+      ? resolveProjectExperienceRefs(entry, allEntries)
+      : [];
 
   return (
     <div className="space-y-8">
@@ -55,6 +65,8 @@ export function ProjectDetail({ entry, titleId }: ProjectDetailProps) {
           <TimelineLinks links={entry.links} />
         </div>
       )}
+
+      <TimelineRelatedExperiences experiences={relatedExperiences} />
     </div>
   );
 }

@@ -9,6 +9,7 @@ import { LogPostBody } from "./LogPostBody";
 import { LogPostGallery } from "./LogPostGallery";
 import { LogPostHeader } from "./LogPostHeader";
 import { LogPostMediaCarousel } from "./LogPostMediaCarousel";
+import { LogPostEngagement } from "./LogPostEngagement";
 import { LogPostPanel } from "./LogPostPanel";
 
 type LogPostArticleProps = {
@@ -43,6 +44,8 @@ export function LogPostArticle({ post }: LogPostArticleProps) {
         {supplementaryMedia.length > 0 && (
           <LogPostGallery items={supplementaryMedia} />
         )}
+
+        <LogPostEngagement slug={post.slug} />
       </div>
     </main>
   );

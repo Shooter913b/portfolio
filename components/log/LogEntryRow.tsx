@@ -3,6 +3,7 @@ import type { BlogPost } from "@/lib/schemas/blog";
 import { formatDisplayDate } from "@/lib/dates";
 import { flightCode } from "@/lib/log/flightCode";
 import { LogEntryThumbnail } from "./LogEntryThumbnail";
+import { LogEntryEngagementStats } from "./LogEntryEngagementStats";
 
 type LogEntryRowProps = {
   post: BlogPost;
@@ -42,6 +43,8 @@ export function LogEntryRow({ post }: LogEntryRowProps) {
                 {!post.excerpt && post.content.length > 160 ? "…" : ""}
               </p>
             )}
+
+            <LogEntryEngagementStats slug={post.slug} className="mt-3" />
 
             <p className="mt-3 font-mono text-xs text-accent-blue/80">
               Read entry →

@@ -42,6 +42,7 @@ export const educationEntrySchema = narrativeEntrySchema.extend({
 
 export const projectEntrySchema = narrativeEntrySchema.extend({
   type: z.literal("project"),
+  relatedExperience: z.array(z.string()).optional().default([]),
 });
 
 export const timelineEntrySchema = z.discriminatedUnion("type", [
@@ -58,10 +59,10 @@ export const timelineSchema = z.object({
 
 export type ResumeEntry = z.infer<typeof resumeEntrySchema>;
 export type SkillsTimelineEntry = z.infer<typeof skillsEntrySchema>;
-export type NarrativeEntry = z.infer<typeof narrativeEntrySchema>;
 export type ExperienceEntry = z.infer<typeof experienceEntrySchema>;
 export type EducationEntry = z.infer<typeof educationEntrySchema>;
 export type ProjectEntry = z.infer<typeof projectEntrySchema>;
+export type NarrativeEntry = ExperienceEntry | EducationEntry | ProjectEntry;
 export type TimelineEntry = z.infer<typeof timelineEntrySchema>;
 
 import type { SkillCategory } from "./skills";

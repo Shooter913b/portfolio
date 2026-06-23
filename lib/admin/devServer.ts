@@ -1,6 +1,13 @@
 import http from "http";
 import { URL } from "url";
+import { isLogReaction } from "@/lib/log/engagement";
 import { DEV_LOGIN, isAdminDevBypass } from "./devMode";
+import {
+  localAdjustReaction,
+  localGetAllEngagement,
+  localGetPostEngagement,
+  localRecordView,
+} from "./localEngagement";
 import {
   localDeleteContent,
   localGetContent,
@@ -88,6 +95,46 @@ export function startDevAdminApi(port = 3456) {
         const bytes = Buffer.from(body.base64, "base64");
         const result = localUploadAsset(body.path, bytes, body.updateResumeDate);
         return sendJson(res, 200, { ok: true, ...result, deploy: "local" });
+      }
+
+      if (route === "log-engagement" && req.method === "GET") {
+        const slug = url.searchParams.get("slug")?.trim() ?? "";
+        if (url.searchParams.get("all") === "1") {
+          return sendJson(res, 200, localGetAllEngagement());
+        }
+        if (!slug) return sendJson(res, 400, { error: "Missing slug" });
+        const engagement = localGetPostEngagement(slug);
+        return sendJson(res, 200, { slug, ...engagement });
+      }
+
+      if (route === "log-engagement" && req.method === "POST") {
+        const body = JSON.parse(await readBody(req)) as {
+          slug?: string;
+          action?: "view" | "react";
+          reaction?: string;
+          delta?: 1 | -1;
+        };
+        const slug = body.slug?.trim();
+        if (!slug || !/^[a-z0-9][a-z0-9-]*$/.test(slug)) {
+          return sendJson(res, 400, { error: "Invalid slug" });
+        }
+
+        if (body.action === "view") {
+          const engagement = localRecordView(slug);
+          return sendJson(res, 200, { slug, ...engagement });
+        }
+
+        if (body.action === "react") {
+          const reaction = body.reaction?.trim();
+          const delta = body.delta === -1 ? -1 : 1;
+          if (!reaction || !isLogReaction(reaction)) {
+            return sendJson(res, 400, { error: "Invalid reaction" });
+          }
+          const engagement = localAdjustReaction(slug, reaction, delta);
+          return sendJson(res, 200, { slug, ...engagement });
+        }
+
+        return sendJson(res, 400, { error: "Invalid action" });
       }
 
       return sendJson(res, 404, { error: "Not found" });

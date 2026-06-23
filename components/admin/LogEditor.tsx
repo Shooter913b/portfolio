@@ -14,6 +14,7 @@ import {
 import { RelatedTimelineEditor } from "./RelatedTimelineEditor";
 import { TimelineMediaEditor } from "./TimelineMediaEditor";
 import { LinksEditor } from "./LinksEditor";
+import { MarkdownEditor } from "./MarkdownEditor";
 import {
   AdminPanel,
   Button,
@@ -25,6 +26,8 @@ import {
   TextArea,
   TextInput,
 } from "./AdminUi";
+import { fetchPostEngagement } from "@/lib/log/engagementClient";
+import { LOG_REACTIONS } from "@/lib/log/engagement";
 import { LogPostPreview } from "./AdminPreview";
 
 type PostFile = { name: string; path: string; slug: string };
@@ -61,11 +64,31 @@ export function LogEditor() {
   const [saving, setSaving] = useState(false);
   const [status, setStatus] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-
-  const assetFolder = useMemo(
-    () => `blog/${postSlugFromPath(selectedPath)}`,
-    [selectedPath]
+  const [engagementViews, setEngagementViews] = useState<number | null>(null);
+  const [engagementReactions, setEngagementReactions] = useState<Record<string, number>>(
+    {}
   );
+
+  const selectedSlug = postSlugFromPath(selectedPath);
+  const assetFolder = useMemo(() => `blog/${selectedSlug}`, [selectedSlug]);
+
+  useEffect(() => {
+    if (!selectedSlug || selectedSlug === "post") {
+      setEngagementViews(null);
+      setEngagementReactions({});
+      return;
+    }
+
+    fetchPostEngagement(selectedSlug)
+      .then((data) => {
+        setEngagementViews(data.views);
+        setEngagementReactions(data.reactions);
+      })
+      .catch(() => {
+        setEngagementViews(0);
+        setEngagementReactions({});
+      });
+  }, [selectedSlug]);
 
   const loadFiles = useCallback(async () => {
     const result = await listBlogPosts();
@@ -205,6 +228,8 @@ export function LogEditor() {
               frontmatter={payload.frontmatter}
               body={payload.body}
               timelineLabel={relatedTimelineLabels || undefined}
+              engagementViews={engagementViews}
+              engagementReactions={engagementReactions}
             />
           }
         >
@@ -310,12 +335,27 @@ export function LogEditor() {
               }
             />
           </Field>
-          <Field label="Body">
-            <TextArea
-              rows={12}
+          <Field label="Body" hint="Markdown supported — use the toolbar or type **bold**, *italic*, [links](url), ## headings, and - lists.">
+            <MarkdownEditor
               value={payload.body}
-              onChange={(e) => setPayload({ ...payload, body: e.target.value })}
+              onChange={(body) => setPayload({ ...payload, body })}
             />
+          </Field>
+
+          <Field label="Engagement stats" hint="Live view and reaction counts from readers.">
+            <div className="rounded-md border border-white/10 bg-[#0c0c12] px-3 py-2 text-sm text-[#c8c8d8]">
+              <p>
+                Views:{" "}
+                {engagementViews === null ? "…" : engagementViews.toLocaleString()}
+              </p>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {LOG_REACTIONS.map((reaction) => (
+                  <span key={reaction} className="font-mono text-xs text-[#8888a0]">
+                    {reaction} {engagementReactions[reaction] ?? 0}
+                  </span>
+                ))}
+              </div>
+            </div>
           </Field>
           <div className="flex flex-wrap gap-3 border-t border-white/10 pt-4">
             <SaveBar onSave={save} saving={saving} status={status} />

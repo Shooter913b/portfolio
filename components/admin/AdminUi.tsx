@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { forwardRef, type ReactNode } from "react";
 import type { ProficiencyLevel } from "@/lib/skills/proficiency";
 import type { SkillItem } from "@/lib/schemas/skills";
 import { cn } from "@/lib/cn";
@@ -108,9 +108,12 @@ export function TextInput({
   );
 }
 
-export function TextArea({ className, ...props }: React.TextareaHTMLAttributes<HTMLTextAreaElement>) {
-  return <textarea {...props} className={cn(inputClass, "font-mono", className)} />;
-}
+export const TextArea = forwardRef<
+  HTMLTextAreaElement,
+  React.TextareaHTMLAttributes<HTMLTextAreaElement>
+>(function TextArea({ className, ...props }, ref) {
+  return <textarea ref={ref} {...props} className={cn(inputClass, "font-mono", className)} />;
+});
 
 export function SelectInput({ className, ...props }: React.SelectHTMLAttributes<HTMLSelectElement>) {
   return <select {...props} className={cn(selectClass, className)} />;

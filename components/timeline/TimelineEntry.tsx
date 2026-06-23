@@ -61,7 +61,8 @@ export function TimelineEntry({ entry, site, index }: TimelineEntryProps) {
               const target = event.target as HTMLElement;
               if (
                 target.closest("[data-carousel-control]") ||
-                target.closest("[data-media-expand]")
+                target.closest("[data-media-expand]") ||
+                target.closest("[data-experience-link]")
               ) {
                 return;
               }

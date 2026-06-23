@@ -3,9 +3,12 @@
 import type { NarrativeEntry } from "@/lib/schemas/timeline";
 import { formatDateRange } from "@/lib/dates";
 import { getFeaturedMedia } from "@/lib/timeline/featuredMedia";
+import { resolveProjectExperienceRefs } from "@/lib/timeline/relatedExperience";
 import { Tag } from "@/components/ui/Tag";
 import { cn } from "@/lib/cn";
 import { TimelineCardFeatured } from "./TimelineCardFeatured";
+import { TimelineExperienceTag } from "./TimelineExperienceTag";
+import { useTimelineEntries } from "./TimelineOverlayContext";
 
 const MAX_TAGS = 3;
 
@@ -14,12 +17,17 @@ type TimelineCardProps = {
 };
 
 export function TimelineCard({ entry }: TimelineCardProps) {
+  const allEntries = useTimelineEntries();
   const featuredMedia = getFeaturedMedia(entry.media);
   const hasFeatured = featuredMedia.length > 0;
   const hasDetails =
     entry.body.length > 0 || entry.media.length > 0 || entry.links.length > 0;
   const visibleTags = entry.tags.slice(0, MAX_TAGS);
   const extraTags = entry.tags.length - visibleTags.length;
+  const relatedExperiences =
+    entry.type === "project"
+      ? resolveProjectExperienceRefs(entry, allEntries)
+      : [];
   const metaLine = [entry.subtitle, entry.location].filter(Boolean).join(" · ");
 
   return (
@@ -48,8 +56,11 @@ export function TimelineCard({ entry }: TimelineCardProps) {
           {entry.summary}
         </p>
 
-        {visibleTags.length > 0 && (
+        {(visibleTags.length > 0 || relatedExperiences.length > 0) && (
           <div className="mt-3 flex flex-wrap items-center gap-2">
+            {relatedExperiences.map((experience) => (
+              <TimelineExperienceTag key={experience.id} experienceRef={experience} />
+            ))}
             {visibleTags.map((tag) => (
               <Tag key={tag}>{tag}</Tag>
             ))}

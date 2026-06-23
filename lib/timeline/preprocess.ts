@@ -28,18 +28,34 @@ function migrateThumbnailToFeatured(
   return nextMedia;
 }
 
+function normalizeRelatedExperience(entry: RawTimelineEntry): RawTimelineEntry {
+  if (entry.type !== "project") return entry;
+
+  const relatedExperience = Array.isArray(entry.relatedExperience)
+    ? entry.relatedExperience.filter(
+        (id): id is string => typeof id === "string" && id.length > 0
+      )
+    : typeof entry.relatedExperience === "string" && entry.relatedExperience
+      ? [entry.relatedExperience]
+      : [];
+
+  return { ...entry, relatedExperience };
+}
+
 function preprocessEntry(entry: RawTimelineEntry): RawTimelineEntry {
   const type = entry.type;
   if (type === "resume" || type === "skills") return entry;
 
-  const thumbnail = entry.thumbnail as LegacyThumbnail | undefined;
-  if (!thumbnail?.src) return entry;
+  let next = normalizeRelatedExperience(entry);
 
-  const media = Array.isArray(entry.media)
-    ? (entry.media as TimelineMediaItem[])
+  const thumbnail = next.thumbnail as LegacyThumbnail | undefined;
+  if (!thumbnail?.src) return next;
+
+  const media = Array.isArray(next.media)
+    ? (next.media as TimelineMediaItem[])
     : [];
 
-  const { thumbnail: _removed, ...rest } = entry;
+  const { thumbnail: _removed, ...rest } = next;
   return {
     ...rest,
     media: migrateThumbnailToFeatured(media, thumbnail),

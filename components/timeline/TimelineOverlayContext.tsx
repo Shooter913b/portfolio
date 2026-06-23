@@ -17,6 +17,7 @@ import { TimelineDeepLink } from "./TimelineDeepLink";
 export type TimelineCardSide = "left" | "right";
 
 type TimelineOverlayContextValue = {
+  entries: NarrativeEntry[];
   openOverlay: (
     id: string,
     side?: TimelineCardSide,
@@ -35,6 +36,10 @@ export function useTimelineOverlay() {
     throw new Error("useTimelineOverlay must be used within TimelineOverlayProvider");
   }
   return ctx;
+}
+
+export function useTimelineEntries(): NarrativeEntry[] {
+  return useTimelineOverlay().entries;
 }
 
 type OverlayState = {
@@ -82,8 +87,8 @@ export function TimelineOverlayProvider({
   }, [activeEntry, posts]);
 
   const value = useMemo(
-    () => ({ openOverlay, closeOverlay }),
-    [openOverlay, closeOverlay]
+    () => ({ entries, openOverlay, closeOverlay }),
+    [entries, openOverlay, closeOverlay]
   );
 
   return (
