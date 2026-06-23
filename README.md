@@ -84,6 +84,11 @@ For full automation, run that command on a schedule (e.g. GitHub Actions with `O
 
 No official Git/API sync. Export a ZIP from Overleaf and replace the `.tex` locally, then `npm run build:resume`.
 
-## Analytics
+## Analytics (GoatCounter)
 
-Set `NEXT_PUBLIC_GOATCOUNTER_SITE` in Netlify env vars (see `.env.example`).
+1. Create a site at [goatcounter.com](https://www.goatcounter.com) and note your **site code** (the subdomain before `.goatcounter.com`).
+2. Set `NEXT_PUBLIC_GOATCOUNTER_SITE` to that code only — e.g. `elfrick`, not a full URL.
+3. In **Netlify → Environment variables**, add the same key, then **redeploy** (public env vars are embedded at build time).
+4. Open your dashboard at `https://YOUR_CODE.goatcounter.com`.
+
+Log post **view counts** on the site use the `/api/log-engagement` function (Netlify Blobs). GoatCounter tracks visits separately in its dashboard.

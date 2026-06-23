@@ -1,11 +1,41 @@
 function trackGoatCounterEvent(path: string): void {
   if (typeof window === "undefined") return;
-  const goatcounter = (
-    window as Window & {
-      goatcounter?: { count: (opts: { path: string; event: boolean }) => void };
+
+  const send = () => {
+    const goatcounter = (
+      window as Window & {
+        goatcounter?: { count: (opts: { path: string; event: boolean }) => void };
+      }
+    ).goatcounter;
+    goatcounter?.count({ path, event: true });
+  };
+
+  if (
+    (
+      window as Window & {
+        goatcounter?: { count: (opts: { path: string; event: boolean }) => void };
+      }
+    ).goatcounter?.count
+  ) {
+    send();
+    return;
+  }
+
+  let attempts = 0;
+  const id = window.setInterval(() => {
+    attempts += 1;
+    const goatcounter = (
+      window as Window & {
+        goatcounter?: { count: (opts: { path: string; event: boolean }) => void };
+      }
+    ).goatcounter;
+    if (goatcounter?.count) {
+      send();
+      window.clearInterval(id);
+    } else if (attempts >= 24) {
+      window.clearInterval(id);
     }
-  ).goatcounter;
-  goatcounter?.count({ path, event: true });
+  }, 250);
 }
 
 export function trackResumeDownload(): void {

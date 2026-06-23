@@ -43,17 +43,21 @@ export function LogPostEngagement({ slug }: LogPostEngagementProps) {
   }, [slug, load]);
 
   useEffect(() => {
-    if (hasRecordedView(slug)) return;
+    if (hasRecordedView(slug)) {
+      trackLogPostView(slug);
+      return;
+    }
 
     void (async () => {
       try {
         const data = await recordPostView(slug);
         markViewRecorded(slug);
-        trackLogPostView(slug);
         setViews(data.views);
         setReactions(data.reactions);
       } catch {
-        // Stats unavailable offline or without API — still show UI at zero.
+        // Engagement API unavailable — still count in GoatCounter below.
+      } finally {
+        trackLogPostView(slug);
       }
     })();
   }, [slug]);
