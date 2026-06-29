@@ -5,9 +5,7 @@ import { isNarrativeEntry } from "@/lib/schemas/timeline";
 import type { Site } from "@/lib/schemas/site";
 import { cn } from "@/lib/cn";
 import { ResumeBlock } from "./ResumeBlock";
-import { ExperienceBlock } from "./ExperienceBlock";
-import { EducationBlock } from "./EducationBlock";
-import { ProjectBlock } from "./ProjectBlock";
+import { TimelineCard } from "./TimelineCard";
 import { useTimelineOverlay } from "./TimelineOverlayContext";
 
 type TimelineEntryProps = {
@@ -22,18 +20,12 @@ export function TimelineEntry({ entry, site, index }: TimelineEntryProps) {
   const isNarrative = isNarrativeEntry(entry);
   const { openOverlay } = useTimelineOverlay();
 
-  const content = (() => {
-    switch (entry.type) {
-      case "resume":
-        return <ResumeBlock site={site} />;
-      case "experience":
-        return <ExperienceBlock entry={entry} />;
-      case "education":
-        return <EducationBlock entry={entry} />;
-      case "project":
-        return <ProjectBlock entry={entry} />;
-    }
-  })();
+  const content =
+    entry.type === "resume" ? (
+      <ResumeBlock site={site} />
+    ) : (
+      <TimelineCard entry={entry} />
+    );
 
   const cardClassName = cn(
     "timeline-card rounded-xl border border-white/5 bg-bg-elevated transition-all duration-300 hover:border-white/10 hover-accent-glow-sm",

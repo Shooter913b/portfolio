@@ -6,6 +6,7 @@ import { MediaCarouselControls } from "@/components/media/MediaCarouselControls"
 import { TimelineMedia } from "@/components/timeline/media/TimelineMedia";
 import { cn } from "@/lib/cn";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { useAutoplayActive } from "@/hooks/useAutoplayActive";
 
 const AUTO_INTERVAL_MS = 6000;
 
@@ -23,6 +24,7 @@ export function MediaCarousel({
   label = "Media carousel",
 }: MediaCarouselProps) {
   const reducedMotion = useReducedMotion();
+  const { ref: rootRef, active: onScreen } = useAutoplayActive<HTMLDivElement>();
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
 
@@ -35,10 +37,10 @@ export function MediaCarousel({
   }, [items]);
 
   useEffect(() => {
-    if (items.length <= 1 || paused || reducedMotion) return;
+    if (items.length <= 1 || paused || reducedMotion || !onScreen) return;
     const id = window.setInterval(next, AUTO_INTERVAL_MS);
     return () => window.clearInterval(id);
-  }, [items.length, paused, reducedMotion, next]);
+  }, [items.length, paused, reducedMotion, onScreen, next]);
 
   if (items.length === 0) return null;
 
@@ -54,6 +56,7 @@ export function MediaCarousel({
 
   return (
     <div
+      ref={rootRef}
       className={cn("overflow-hidden rounded-xl border border-white/10 bg-bg-subtle", className)}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
@@ -67,7 +70,7 @@ export function MediaCarousel({
           onIndexChange={setIndex}
           showCounter
           label={label}
-          autoPlay={!paused && !reducedMotion}
+          autoPlay={!paused && !reducedMotion && onScreen}
           intervalMs={AUTO_INTERVAL_MS}
         />
       </div>

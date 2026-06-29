@@ -143,6 +143,11 @@ export function LoadingScreen() {
 
   const finish = useCallback(() => {
     document.body.style.overflow = "";
+    try {
+      sessionStorage.setItem("loader-seen", "1");
+    } catch {
+      // sessionStorage may be unavailable (private mode); ignore.
+    }
     setDone(true);
     window.setTimeout(() => setHidden(true), 450);
   }, []);
@@ -163,7 +168,13 @@ export function LoadingScreen() {
   useEffect(() => {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const deepLinkEntry = new URLSearchParams(window.location.search).get("entry");
-    if (reduced || deepLinkEntry) {
+    let alreadySeen = false;
+    try {
+      alreadySeen = sessionStorage.getItem("loader-seen") === "1";
+    } catch {
+      alreadySeen = false;
+    }
+    if (reduced || deepLinkEntry || alreadySeen) {
       document.body.style.overflow = "";
       setDone(true);
       setHidden(true);

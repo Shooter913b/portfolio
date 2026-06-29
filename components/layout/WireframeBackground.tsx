@@ -301,22 +301,54 @@ export function WireframeBackground() {
       }
     };
 
+    const loop = (t: number) => {
+      draw(t);
+      rafRef.current = requestAnimationFrame(loop);
+    };
+
+    const start = () => {
+      if (reduced || rafRef.current !== null) return;
+      rafRef.current = requestAnimationFrame(loop);
+    };
+
+    const stop = () => {
+      if (rafRef.current !== null) {
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
+      }
+    };
+
+    // Pause the animation loop whenever the tab is backgrounded — there's no
+    // point spending frames on a decorative canvas nobody can see.
+    const onVisibility = () => {
+      if (document.hidden) stop();
+      else start();
+    };
+
+    let resizeTimer: number | null = null;
+    const onResize = () => {
+      if (resizeTimer !== null) window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(() => {
+        resize();
+        if (reduced) draw(0);
+      }, 180);
+    };
+
     resize();
 
     if (reduced) {
       draw(0);
     } else {
-      const loop = (t: number) => {
-        draw(t);
-        rafRef.current = requestAnimationFrame(loop);
-      };
-      rafRef.current = requestAnimationFrame(loop);
+      start();
     }
 
-    window.addEventListener("resize", resize, { passive: true });
+    window.addEventListener("resize", onResize, { passive: true });
+    document.addEventListener("visibilitychange", onVisibility);
     return () => {
-      window.removeEventListener("resize", resize);
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      window.removeEventListener("resize", onResize);
+      document.removeEventListener("visibilitychange", onVisibility);
+      if (resizeTimer !== null) window.clearTimeout(resizeTimer);
+      stop();
     };
   }, []);
 

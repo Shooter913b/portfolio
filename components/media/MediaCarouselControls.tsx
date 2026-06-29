@@ -133,7 +133,3 @@ export function MediaCarouselControls({
     </div>
   );
 }
-
-export function wrapCarouselIndex(index: number, count: number): number {
-  return wrapIndex(index, count);
-}

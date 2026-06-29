@@ -7,6 +7,7 @@ import { getFeaturedPostMedia } from "@/lib/log/postMedia";
 import { formatDisplayDate } from "@/lib/dates";
 import { cn } from "@/lib/cn";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { useAutoplayActive } from "@/hooks/useAutoplayActive";
 import { MediaCarouselControls } from "@/components/media/MediaCarouselControls";
 import { TimelineCardFeatured } from "@/components/timeline/TimelineCardFeatured";
 
@@ -19,6 +20,7 @@ type FeaturedCarouselProps = {
 
 export function FeaturedCarousel({ posts, className }: FeaturedCarouselProps) {
   const reducedMotion = useReducedMotion();
+  const { ref: rootRef, active: onScreen } = useAutoplayActive<HTMLDivElement>();
   const [postIndex, setPostIndex] = useState(0);
   const [mediaIndex, setMediaIndex] = useState(0);
   const [paused, setPaused] = useState(false);
@@ -56,7 +58,7 @@ export function FeaturedCarousel({ posts, className }: FeaturedCarouselProps) {
 
   const hasMultipleSlides =
     featuredMedia.length > 1 || posts.length > 1;
-  const autoPlaying = hasMultipleSlides && !paused && !reducedMotion;
+  const autoPlaying = hasMultipleSlides && !paused && !reducedMotion && onScreen;
 
   useEffect(() => {
     if (!autoPlaying) return;
@@ -68,6 +70,7 @@ export function FeaturedCarousel({ posts, className }: FeaturedCarouselProps) {
 
   return (
     <div
+      ref={rootRef}
       className={cn("mt-8", className)}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}

@@ -1,12 +1,13 @@
 import fs from "fs";
 import path from "path";
+import { cache } from "react";
 import matter from "gray-matter";
 import { blogFrontmatterSchema, type BlogPost } from "@/lib/schemas/blog";
 import { preprocessPostFrontmatter } from "@/lib/log/preprocessPost";
 
 const BLOG_DIR = path.join(process.cwd(), "content/blog");
 
-export function getAllPosts(): BlogPost[] {
+export const getAllPosts = cache((): BlogPost[] => {
   if (!fs.existsSync(BLOG_DIR)) return [];
 
   const files = fs.readdirSync(BLOG_DIR).filter((f) => f.endsWith(".mdx") || f.endsWith(".md"));
@@ -20,9 +21,9 @@ export function getAllPosts(): BlogPost[] {
       return { ...frontmatter, slug, content };
     })
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-}
+});
 
-export function getFeaturedPosts(): BlogPost[] {
+export const getFeaturedPosts = cache((): BlogPost[] => {
   const posts = getAllPosts();
   if (posts.length === 0) return [];
 
@@ -38,7 +39,7 @@ export function getFeaturedPosts(): BlogPost[] {
   return [...bySlug.values()].sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
   );
-}
+});
 
 export function getPostBySlug(slug: string): BlogPost | undefined {
   return getAllPosts().find((p) => p.slug === slug);

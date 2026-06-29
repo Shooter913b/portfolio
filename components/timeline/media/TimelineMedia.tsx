@@ -128,7 +128,3 @@ export function TimelineMedia({
     </>
   );
 }
-
-export function hasTimelineMedia(items: TimelineMediaItem[]): boolean {
-  return items.length > 0;
-}

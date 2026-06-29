@@ -11,6 +11,7 @@ import {
 } from "@/lib/timeline/featuredMedia";
 import { cn } from "@/lib/cn";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { useAutoplayActive } from "@/hooks/useAutoplayActive";
 
 const AUTO_INTERVAL_MS = 5000;
 
@@ -117,6 +118,7 @@ export function TimelineCardFeatured({
   showAutoProgress,
 }: TimelineCardFeaturedProps) {
   const reducedMotion = useReducedMotion();
+  const { ref: rootRef, active: onScreen } = useAutoplayActive<HTMLDivElement>();
   const [internalIndex, setInternalIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const [lightboxOpen, setLightboxOpen] = useState(false);
@@ -153,10 +155,18 @@ export function TimelineCardFeatured({
   }, [items, isControlled]);
 
   useEffect(() => {
-    if (isControlled || !autoPlay || items.length <= 1 || paused || reducedMotion) return;
-    const id = window.setInterval(next, AUTO_INTERVAL_MS);
+    if (
+      isControlled ||
+      !autoPlay ||
+      items.length <= 1 ||
+      paused ||
+      reducedMotion ||
+      !onScreen
+    )
+      return;
+    const id = window.setInterval(next, intervalMs);
     return () => window.clearInterval(id);
-  }, [isControlled, autoPlay, items.length, paused, reducedMotion, next]);
+  }, [isControlled, autoPlay, items.length, paused, reducedMotion, onScreen, intervalMs, next]);
 
   const safeIndex =
     items.length > 0 ? ((index % items.length) + items.length) % items.length : 0;
@@ -173,10 +183,11 @@ export function TimelineCardFeatured({
   const showControls = items.length > 1;
   const lightboxSrc = item.type === "image" ? item.src : null;
   const progressEnabled =
-    showAutoProgress ?? (!isControlled && autoPlay && !paused && !reducedMotion);
+    showAutoProgress ??
+    (!isControlled && autoPlay && !paused && !reducedMotion && onScreen);
 
   return (
-    <div className={cn("group", className)}>
+    <div ref={rootRef} className={cn("group", className)}>
       <div
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => setPaused(false)}

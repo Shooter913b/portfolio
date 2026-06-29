@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { readJsonFile } from "./readJson";
 import { getSkills } from "./getSkills";
 import {
@@ -33,7 +34,7 @@ function compareTimelineEntries(a: TimelineEntry, b: TimelineEntry): number {
   return a.order - b.order;
 }
 
-export function getTimeline(): ResolvedTimelineEntry[] {
+export const getTimeline = cache((): ResolvedTimelineEntry[] => {
   const preprocessed = preprocessTimelineData(readJsonFile("content/timeline.json"));
   const { entries } = timelineSchema.parse(preprocessed);
   const skills = getSkills();
@@ -50,8 +51,4 @@ export function getTimeline(): ResolvedTimelineEntry[] {
       }
       return entry as ResolvedTimelineEntry;
     });
-}
-
-export function getTimelineEntryIds(): string[] {
-  return getTimeline().map((e) => e.id);
-}
+});

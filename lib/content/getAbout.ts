@@ -1,9 +1,10 @@
+import { cache } from "react";
 import { readJsonFile } from "./readJson";
 import { normalizeAbout } from "@/lib/about/normalize";
 
-export function getAbout() {
+export const getAbout = cache(() => {
   return normalizeAbout(
     readJsonFile("content/about.json"),
     readJsonFile("content/site.json")
   );
-}
+});

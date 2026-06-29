@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { SkillCategory } from "@/lib/schemas/skills";
 import { cn } from "@/lib/cn";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { useAutoplayActive } from "@/hooks/useAutoplayActive";
 import { Button } from "@/components/ui/Button";
 import { SkillCategoryPanel } from "./SkillCategoryPanel";
 
@@ -21,6 +22,7 @@ export function SkillsCarousel({
   entryId,
 }: SkillsCarouselProps) {
   const measureRef = useRef<HTMLDivElement | null>(null);
+  const { ref: rootRef, active: onScreen } = useAutoplayActive<HTMLDivElement>();
   const [index, setIndex] = useState(0);
   const [autoPlay, setAutoPlay] = useState(true);
   const [panelHeight, setPanelHeight] = useState<number | undefined>();
@@ -58,13 +60,13 @@ export function SkillsCarousel({
   }, [categories]);
 
   useEffect(() => {
-    if (categories.length <= 1 || !autoPlay || reducedMotion) return;
+    if (categories.length <= 1 || !autoPlay || reducedMotion || !onScreen) return;
     const id = window.setInterval(next, AUTO_MS);
     return () => window.clearInterval(id);
-  }, [categories.length, autoPlay, reducedMotion, next]);
+  }, [categories.length, autoPlay, reducedMotion, onScreen, next]);
 
   return (
-    <div data-timeline-entry={entryId} className="relative">
+    <div ref={rootRef} data-timeline-entry={entryId} className="relative">
       <div
         data-timeline-dot
         className="timeline-dot absolute left-1/2 top-8 hidden h-3 w-3 rounded-full ring-4 ring-bg-base md:block"
@@ -162,13 +164,13 @@ export function SkillsCarousel({
                           <span
                             className={cn(
                               "absolute inset-0 rounded-full",
-                              autoPlay && !reducedMotion
+                              autoPlay && !reducedMotion && onScreen
                                 ? "carousel-indicator-active opacity-25"
                                 : "carousel-indicator-active"
                             )}
                             aria-hidden
                           />
-                          {autoPlay && !reducedMotion && (
+                          {autoPlay && !reducedMotion && onScreen && (
                             <span
                               key={`progress-${index}`}
                               className="carousel-indicator-active carousel-auto-progress absolute inset-0 rounded-full"

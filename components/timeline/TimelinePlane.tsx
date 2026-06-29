@@ -48,6 +48,11 @@ export function TimelinePlane() {
       "(prefers-reduced-motion: reduce)"
     ).matches;
 
+    let running = false;
+    const schedule = () => {
+      if (running) rafRef.current = requestAnimationFrame(tick);
+    };
+
     let curX = window.innerWidth + 160;
     let curY = window.innerHeight * FOCUS_LINE;
     let prevY = curY;
@@ -135,7 +140,7 @@ export function TimelinePlane() {
           curY - PLANE_H / 2
         }px) rotate(${BASE_ROT}deg)`;
         prevY = curY;
-        rafRef.current = requestAnimationFrame(tick);
+        schedule();
         return;
       }
 
@@ -196,13 +201,72 @@ export function TimelinePlane() {
         curY + bobY - PLANE_H / 2
       }px) rotate(${rot}deg)`;
 
+      schedule();
+    };
+
+    const start = () => {
+      if (running) return;
+      running = true;
+      lastTime = 0;
       rafRef.current = requestAnimationFrame(tick);
     };
 
-    rafRef.current = requestAnimationFrame(tick);
+    const stop = () => {
+      running = false;
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
+      }
+    };
+
+    // Only drive the loop when it can actually be seen: desktop viewport, tab
+    // visible, and the timeline scrolled into view. The plane is `hidden` below
+    // md, so without these gates we'd burn frames + layout reads for nothing.
+    const desktopMq = window.matchMedia("(min-width: 768px)");
+    let desktop = desktopMq.matches;
+    let visible = !document.hidden;
+    let onScreen = true;
+
+    const sync = () => {
+      if (desktop && visible && onScreen) {
+        start();
+      } else {
+        stop();
+        setFocused(null);
+        plane.style.opacity = "0";
+      }
+    };
+
+    const onDesktopChange = (e: MediaQueryListEvent) => {
+      desktop = e.matches;
+      sync();
+    };
+    const onVisibility = () => {
+      visible = !document.hidden;
+      sync();
+    };
+
+    const root = document.querySelector("[data-timeline-root]");
+    const observer = root
+      ? new IntersectionObserver(
+          ([entry]) => {
+            onScreen = entry.isIntersecting;
+            sync();
+          },
+          { rootMargin: "200px 0px" }
+        )
+      : null;
+    observer?.observe(root!);
+
+    desktopMq.addEventListener("change", onDesktopChange);
+    document.addEventListener("visibilitychange", onVisibility);
+    sync();
 
     return () => {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      stop();
+      observer?.disconnect();
+      desktopMq.removeEventListener("change", onDesktopChange);
+      document.removeEventListener("visibilitychange", onVisibility);
       setFocused(null);
     };
   }, []);

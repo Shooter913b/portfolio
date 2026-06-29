@@ -6,7 +6,7 @@ import {
 } from "@/lib/skills/proficiency";
 import { SkillDots } from "./SkillDots";
 
-export function buildSkillList(
+function buildSkillList(
   category: SkillCategory
 ): { name: string; level: ProficiencyLevel }[] {
   const skills = category.skills ?? [];

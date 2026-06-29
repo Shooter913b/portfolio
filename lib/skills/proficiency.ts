@@ -1,8 +1,4 @@
-import {
-  accentDotGlow,
-  accentGlowText,
-  accentGlowTextStrong,
-} from "@/lib/theme/accents";
+import { accentDotGlow, accentGlowText } from "@/lib/theme/accents";
 
 export type ProficiencyLevel = 1 | 2 | 3 | 4;
 
@@ -19,11 +15,6 @@ export function proficiencyColor(level: ProficiencyLevel): string {
   const g = lerp(PURPLE.g, ELECTRIC_BLUE.g, t);
   const b = lerp(PURPLE.b, ELECTRIC_BLUE.b, t);
   return `rgb(${r}, ${g}, ${b})`;
-}
-
-export function proficiencyGlow(level: ProficiencyLevel): string | undefined {
-  if (level < 4) return undefined;
-  return accentGlowTextStrong;
 }
 
 export function proficiencyTextShadow(level: ProficiencyLevel): string | undefined {

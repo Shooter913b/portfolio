@@ -5,7 +5,9 @@ import {
   getAllPosts,
   getFeaturedPosts,
 } from "@/lib/content/getFeaturedPosts";
-import { HomePageClient } from "@/components/HomePageClient";
+import { HeroSection } from "@/components/hero/HeroSection";
+import { MobileDesktopNotice } from "@/components/hero/MobileDesktopNotice";
+import { TimelineSection } from "@/components/timeline/TimelineSection";
 
 export default function HomePage() {
   const site = getSite();
@@ -15,12 +17,10 @@ export default function HomePage() {
   const featuredPosts = getFeaturedPosts();
 
   return (
-    <HomePageClient
-      site={site}
-      profile={profile}
-      timeline={timeline}
-      featuredPosts={featuredPosts}
-      posts={posts}
-    />
+    <main>
+      <HeroSection site={site} profile={profile} featuredPosts={featuredPosts} />
+      <MobileDesktopNotice />
+      <TimelineSection entries={timeline} site={site} posts={posts} />
+    </main>
   );
 }
