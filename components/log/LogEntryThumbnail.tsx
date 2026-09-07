@@ -28,7 +28,7 @@ export function LogEntryThumbnail({ post, className }: LogEntryThumbnailProps) {
   return (
     <div
       className={cn(
-        "relative flex aspect-[5/3] w-full shrink-0 items-center justify-center overflow-hidden rounded-lg border border-white/5 bg-bg-subtle accent-gradient-soft-bg sm:w-44 md:w-48",
+        "relative flex aspect-[5/3] w-full shrink-0 items-center justify-center overflow-hidden glass-pane-inset sm:w-44 md:w-48",
         className
       )}
       aria-hidden

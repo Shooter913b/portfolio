@@ -24,7 +24,7 @@ export function TimelineExperienceTag({
         openOverlay(experienceRef.id);
       }}
       className={cn(
-        "inline-flex max-w-full items-center gap-1.5 rounded-full border border-accent-blue/30 bg-accent-blue/10 px-2.5 py-0.5 font-mono text-xs text-accent-blue transition-colors hover:border-accent-blue/50 hover:bg-accent-blue/15",
+        "glass-tag inline-flex max-w-full items-center gap-1.5 px-2.5 py-0.5 font-mono text-xs transition-[box-shadow,filter] duration-200 hover:brightness-110",
         className
       )}
       title={`View experience: ${experienceRef.title}`}

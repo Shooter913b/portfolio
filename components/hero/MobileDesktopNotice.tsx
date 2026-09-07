@@ -38,13 +38,13 @@ export function MobileDesktopNotice() {
 
       <div className="relative w-full max-w-sm">
         <div
-          className="pointer-events-none absolute -inset-6 rounded-3xl accent-gradient-soft-bg opacity-60 blur-2xl"
+          className="pointer-events-none absolute -inset-6 accent-gradient-soft-bg opacity-60 blur-2xl"
           aria-hidden
         />
-        <div className="relative overflow-hidden rounded-2xl border border-accent-blue/35 bg-bg-elevated p-6 shadow-[0_0_40px_-8px_rgb(0_212_255/0.45)] accent-glow-md">
+        <div className="glass-pane accent-glow-md relative overflow-hidden p-6">
           <div className="accent-gradient-bg h-1 w-full" aria-hidden />
           <div className="mt-5 flex flex-col items-center text-center">
-            <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-accent-blue/30 bg-bg-subtle accent-gradient-soft-bg">
+            <div className="glass-pane-inset accent-glow-sm flex h-14 w-14 items-center justify-center">
               <MonitorIcon />
             </div>
             <p className="mt-4 font-mono text-[10px] uppercase tracking-[0.22em] text-accent-blue">

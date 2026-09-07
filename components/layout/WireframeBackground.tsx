@@ -2,11 +2,13 @@
 
 import { useEffect, useRef } from "react";
 
-const TARGET_POINTS = 220;
-const WAVE_AMP = 7;
-const DRIFT_AMP = 14;
-const LINK_RATIO = 2.15;
-const ACTIVITY_CUTOFF = 0.22;
+const TARGET_POINTS = 110;
+const WAVE_AMP = 6;
+const DRIFT_AMP = 11;
+const LINK_RATIO = 2.05;
+const ACTIVITY_CUTOFF = 0.24;
+/** Cap decorative canvas to ~30fps — plenty for ambient motion. */
+const FRAME_MS = 1000 / 30;
 
 type StarHue = "white" | "cyan" | "blue" | "purple" | "gold";
 
@@ -58,14 +60,10 @@ function deadZoneFactor(
   viewW: number,
   viewH: number
 ): number {
-  // Positive depth = below the top-left → bottom-right diagonal.
   const depth = y / viewH - x / viewW;
-
   if (depth <= 0) return 1;
-
   const soft = 0.09;
   if (depth >= soft) return 0;
-
   const t = depth / soft;
   return 1 - t * t;
 }
@@ -81,12 +79,14 @@ function activity(
   const n1 = Math.sin(x * 0.0048 + t * 0.19) * Math.cos(y * 0.0042 - t * 0.16);
   const n2 = Math.sin(x * 0.0095 - t * 0.11 + y * 0.0078) * 0.65;
   const n3 = Math.cos(x * 0.0028 + y * 0.0031 + t * 0.07) * 0.45;
-  const n4 = Math.sin((x + y) * 0.003 + t * 0.24) * 0.35;
-  const field = Math.max(0, Math.min(1, (n1 + n2 + n3 + n4 + 1.55) / 3.1));
+  const field = Math.max(0, Math.min(1, (n1 + n2 + n3 + 1.35) / 2.75));
   return field * deadZoneFactor(x, y, viewW, viewH);
 }
 
-function buildPoints(width: number, height: number): { points: Point[]; maxLink: number } {
+function buildPoints(width: number, height: number): {
+  points: Point[];
+  maxLink: number;
+} {
   const spacing = Math.sqrt((width * height) / TARGET_POINTS) * 0.92;
   const rowStep = spacing * (Math.sqrt(3) / 2);
   const points: Point[] = [];
@@ -104,10 +104,10 @@ function buildPoints(width: number, height: number): { points: Point[]; maxLink:
         phase: cellRand(col, row, 3) * Math.PI * 2,
         freq: 0.45 + cellRand(col, row, 4) * 0.85,
         drift: cellRand(col, row, 5) * Math.PI * 2,
-        starSize: 0.45 + r * 1.35,
-        starGlow: 0.5 + cellRand(col, row, 7) * 2.2,
+        starSize: 0.45 + r * 1.2,
+        starGlow: 0.45 + cellRand(col, row, 7) * 1.6,
         starHue: pickStarHue(col, row),
-        twinkle: 0.6 + cellRand(col, row, 9) * 2.4,
+        twinkle: 0.6 + cellRand(col, row, 9) * 2.0,
       });
     }
   }
@@ -119,6 +119,7 @@ function bucketKey(x: number, y: number, cell: number): string {
   return `${Math.floor(x / cell)},${Math.floor(y / cell)}`;
 }
 
+/** Cheap star: solid discs for small nodes; one gradient only for bright ones. */
 function drawStar(
   ctx: CanvasRenderingContext2D,
   x: number,
@@ -133,37 +134,30 @@ function drawStar(
 ) {
   const pulse = 0.55 + 0.45 * Math.sin(time * twinkle + phase);
   const coreR = size * (0.35 + pulse * 0.25);
-  const glowR = coreR * (2.5 + glow * 2.8);
   const b = brightness * pulse;
   const c = STAR_COLORS[hue];
 
-  const grad = ctx.createRadialGradient(x, y, 0, x, y, glowR);
-  grad.addColorStop(0, `rgba(${c.core}, ${0.95 * b})`);
-  grad.addColorStop(0.12, `rgba(${c.mid}, ${0.55 * b})`);
-  grad.addColorStop(0.45, `rgba(${c.outer}, ${0.18 * b})`);
-  grad.addColorStop(1, `rgba(${c.outer}, 0)`);
+  if (size > 0.95 && glow > 1.1) {
+    const glowR = coreR * (2.2 + glow * 1.8);
+    const grad = ctx.createRadialGradient(x, y, 0, x, y, glowR);
+    grad.addColorStop(0, `rgba(${c.core}, ${0.9 * b})`);
+    grad.addColorStop(0.35, `rgba(${c.mid}, ${0.28 * b})`);
+    grad.addColorStop(1, `rgba(${c.outer}, 0)`);
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(x, y, glowR, 0, Math.PI * 2);
+    ctx.fill();
+  } else {
+    ctx.fillStyle = `rgba(${c.mid}, ${0.55 * b})`;
+    ctx.beginPath();
+    ctx.arc(x, y, coreR * 1.4, 0, Math.PI * 2);
+    ctx.fill();
+  }
 
-  ctx.fillStyle = grad;
-  ctx.beginPath();
-  ctx.arc(x, y, glowR, 0, Math.PI * 2);
-  ctx.fill();
-
-  ctx.fillStyle = `rgba(255, 255, 255, ${0.85 * b})`;
+  ctx.fillStyle = `rgba(255, 255, 255, ${0.8 * b})`;
   ctx.beginPath();
   ctx.arc(x, y, coreR * 0.45, 0, Math.PI * 2);
   ctx.fill();
-
-  if (size > 1.1 && glow > 1.4) {
-    ctx.strokeStyle = `rgba(${c.mid}, ${0.25 * b})`;
-    ctx.lineWidth = 0.5;
-    const spike = coreR * 1.8;
-    ctx.beginPath();
-    ctx.moveTo(x - spike, y);
-    ctx.lineTo(x + spike, y);
-    ctx.moveTo(x, y - spike);
-    ctx.lineTo(x, y + spike);
-    ctx.stroke();
-  }
 }
 
 /**
@@ -179,7 +173,7 @@ export function WireframeBackground() {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext("2d", { alpha: true });
     if (!ctx) return;
 
     const reduced = window.matchMedia(
@@ -189,11 +183,15 @@ export function WireframeBackground() {
     let width = 0;
     let height = 0;
     let dpr = 1;
+    let lastDraw = 0;
+    let scrolling = false;
+    let scrollIdleTimer: number | null = null;
 
     const resize = () => {
       width = window.innerWidth;
       height = window.innerHeight;
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      // Cap DPR — retina full-res is wasteful for soft ambient glow.
+      dpr = Math.min(window.devicePixelRatio || 1, 1.5);
       canvas.width = Math.floor(width * dpr);
       canvas.height = Math.floor(height * dpr);
       canvas.style.width = `${width}px`;
@@ -215,8 +213,12 @@ export function WireframeBackground() {
           ? 0
           : Math.sin(time * p.freq + p.phase) * WAVE_AMP +
             Math.cos(time * p.freq * 0.65 + p.phase * 1.4) * (WAVE_AMP * 0.45);
-        const driftX = reduced ? 0 : Math.sin(time * 0.14 + p.drift) * DRIFT_AMP;
-        const driftY = reduced ? 0 : Math.cos(time * 0.12 + p.drift * 1.2) * DRIFT_AMP;
+        const driftX = reduced
+          ? 0
+          : Math.sin(time * 0.14 + p.drift) * DRIFT_AMP;
+        const driftY = reduced
+          ? 0
+          : Math.cos(time * 0.12 + p.drift * 1.2) * DRIFT_AMP;
         const x = p.bx + wave * 0.5 + driftX;
         const y = p.by + wave + driftY;
         const act = activity(x, y, time, width, height);
@@ -243,8 +245,9 @@ export function WireframeBackground() {
         const cx = Math.floor(a.x / cell);
         const cy = Math.floor(a.y / cell);
 
-        for (let ox = -2; ox <= 2; ox++) {
-          for (let oy = -2; oy <= 2; oy++) {
+        // 3×3 neighborhood is enough at this spacing.
+        for (let ox = -1; ox <= 1; ox++) {
+          for (let oy = -1; oy <= 1; oy++) {
             const neighbors = buckets.get(`${cx + ox},${cy + oy}`);
             if (!neighbors) continue;
 
@@ -302,8 +305,12 @@ export function WireframeBackground() {
     };
 
     const loop = (t: number) => {
-      draw(t);
       rafRef.current = requestAnimationFrame(loop);
+      // Skip heavy redraws while the user is scrolling or between FPS ticks.
+      if (scrolling) return;
+      if (t - lastDraw < FRAME_MS) return;
+      lastDraw = t;
+      draw(t);
     };
 
     const start = () => {
@@ -318,11 +325,17 @@ export function WireframeBackground() {
       }
     };
 
-    // Pause the animation loop whenever the tab is backgrounded — there's no
-    // point spending frames on a decorative canvas nobody can see.
     const onVisibility = () => {
       if (document.hidden) stop();
       else start();
+    };
+
+    const onScroll = () => {
+      scrolling = true;
+      if (scrollIdleTimer !== null) window.clearTimeout(scrollIdleTimer);
+      scrollIdleTimer = window.setTimeout(() => {
+        scrolling = false;
+      }, 120);
     };
 
     let resizeTimer: number | null = null;
@@ -343,11 +356,14 @@ export function WireframeBackground() {
     }
 
     window.addEventListener("resize", onResize, { passive: true });
+    window.addEventListener("scroll", onScroll, { passive: true });
     document.addEventListener("visibilitychange", onVisibility);
     return () => {
       window.removeEventListener("resize", onResize);
+      window.removeEventListener("scroll", onScroll);
       document.removeEventListener("visibilitychange", onVisibility);
       if (resizeTimer !== null) window.clearTimeout(resizeTimer);
+      if (scrollIdleTimer !== null) window.clearTimeout(scrollIdleTimer);
       stop();
     };
   }, []);

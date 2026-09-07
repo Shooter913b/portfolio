@@ -23,7 +23,7 @@
     0 0 20px rgb(168 85 247 / 0.25);
   --accent-glow-md: 0 0 14px 3px rgb(0 212 255 / 0.45),
     0 0 28px 6px rgb(168 85 247 / 0.35);
-  --accent-glow-lg: 0 0 0 1px rgb(0 212 255 / 0.2),
+  --accent-glow-lg: 0 0 24px -6px rgb(0 212 255 / 0.28),
     0 14px 40px -16px rgb(0 212 255 / 0.35),
     0 24px 60px -24px rgb(168 85 247 / 0.3);
   --accent-glow-xl: 0 24px 80px -32px rgb(0 212 255 / 0.28),
@@ -106,6 +106,245 @@ body {
 
 .accent-glow-xl {
   box-shadow: var(--accent-glow-xl);
+}
+
+/* Black acrylic panes. The perimeter is the darkest part of the sheet — light
+   only ever arrives as (a) faint surface glare and (b) a wide backlight that
+   spills from behind a pane while it is focused.
+
+   Shadows are assembled from three vars so states can swap one layer and still
+   interpolate: every backlight keeps the same shadow count as the resting one,
+   which is the same list at zero alpha. */
+.glass-pane,
+.glass-pane-inset {
+  --glass-edge: inset 0 0 0 1px rgb(0 0 0 / 0.55),
+    inset 0 0 26px -6px rgb(0 0 0 / 0.7), inset 0 0 72px -26px rgb(0 0 0 / 0.5);
+  --glass-lift: 0 26px 60px -44px rgb(0 0 0 / 0.9);
+  --glass-backlight: 0 0 50px 2px rgb(0 212 255 / 0),
+    0 0 110px 20px rgb(0 212 255 / 0), 0 0 170px 44px rgb(168 85 247 / 0);
+  border: 0;
+  border-radius: 0;
+  box-shadow: var(--glass-edge), var(--glass-lift), var(--glass-backlight);
+  -webkit-backdrop-filter: var(--glass-filter);
+  backdrop-filter: var(--glass-filter);
+  transition: background-position 0.9s ease, background-color 0.4s ease,
+    opacity 0.35s ease, transform 0.55s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.glass-pane {
+  /* Kept in a var so the -webkit- alias survives minification. */
+  --glass-filter: blur(14px) saturate(1.35) brightness(0.5);
+  background-color: rgb(2 2 6 / 0.42);
+  background-image:
+    /* narrow specular streak, as if a light source rakes across the sheet */
+    linear-gradient(
+      118deg,
+      transparent 22%,
+      rgb(255 255 255 / 0.04) 30%,
+      rgb(255 255 255 / 0.075) 33%,
+      rgb(255 255 255 / 0.015) 38%,
+      transparent 50%
+    ),
+    /* soft reflection caught in the top corner */
+    radial-gradient(
+        140% 100% at 14% -20%,
+        rgb(255 255 255 / 0.055) 0%,
+        transparent 58%
+      ),
+    /* barely-there iridescence */
+    linear-gradient(
+      202deg,
+      rgb(0 212 255 / 0.03) 0%,
+      transparent 42%,
+      rgb(168 85 247 / 0.035) 100%
+    );
+  background-size: 240% 240%, 100% 100%, 100% 100%;
+  background-position: 28% 28%, 0% 0%, 0% 0%;
+}
+
+.glass-pane-inset {
+  --glass-edge: inset 0 0 0 1px rgb(0 0 0 / 0.45),
+    inset 0 0 20px -6px rgb(0 0 0 / 0.55);
+  --glass-lift: 0 14px 34px -30px rgb(0 0 0 / 0.8);
+  /* Nested frames skip live blur — one frosted parent is enough. */
+  --glass-filter: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  background-color: rgb(2 2 6 / 0.55);
+  background-image: linear-gradient(
+      118deg,
+      transparent 24%,
+      rgb(255 255 255 / 0.03) 31%,
+      rgb(255 255 255 / 0.055) 34%,
+      transparent 44%
+    ),
+    radial-gradient(
+      140% 100% at 16% -22%,
+      rgb(255 255 255 / 0.04) 0%,
+      transparent 56%
+    );
+  background-size: 240% 240%, 100% 100%;
+  background-position: 28% 28%, 0% 0%;
+}
+
+/* Dense acrylic for overlays / flip faces: keeps the glare language but blocks
+   show-through. backdrop-filter is disabled — it breaks backface-visibility on
+   3D flips and lets the opposite face's text bleed through. */
+.glass-pane.glass-pane-opaque,
+.glass-pane-inset.glass-pane-opaque {
+  --glass-filter: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  background-color: rgb(3 3 8 / 0.96);
+  background-image:
+    linear-gradient(
+      118deg,
+      transparent 22%,
+      rgb(255 255 255 / 0.035) 30%,
+      rgb(255 255 255 / 0.07) 33%,
+      rgb(255 255 255 / 0.012) 38%,
+      transparent 50%
+    ),
+    radial-gradient(
+      140% 100% at 14% -20%,
+      rgb(255 255 255 / 0.05) 0%,
+      transparent 58%
+    ),
+    linear-gradient(
+      202deg,
+      rgb(0 212 255 / 0.025) 0%,
+      transparent 42%,
+      rgb(168 85 247 / 0.03) 100%
+    );
+  background-size: 240% 240%, 100% 100%, 100% 100%;
+  background-position: 28% 28%, 0% 0%, 0% 0%;
+}
+
+.glass-pane-inset.glass-pane-opaque {
+  background-color: rgb(6 6 12 / 0.9);
+}
+
+/* Large board shell (e.g. logs index): matte tinted tray — no specular glare,
+   just a quiet blue→purple wash so it sits in theme rather than pure black. */
+.glass-pane-board {
+  --glass-edge: inset 0 0 0 1px rgb(0 12 28 / 0.55),
+    inset 0 0 28px -8px rgb(0 0 0 / 0.55);
+  --glass-lift: 0 22px 50px -40px rgb(0 0 0 / 0.85);
+  --glass-backlight: 0 0 50px 2px rgb(0 212 255 / 0),
+    0 0 110px 20px rgb(0 212 255 / 0), 0 0 170px 44px rgb(168 85 247 / 0);
+  border: 0;
+  border-radius: 0;
+  box-shadow: var(--glass-edge), var(--glass-lift), var(--glass-backlight);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  background-color: rgb(8 14 28 / 0.82);
+  background-image: linear-gradient(
+    155deg,
+    rgb(0 212 255 / 0.07) 0%,
+    rgb(6 10 22 / 0.2) 42%,
+    rgb(168 85 247 / 0.08) 100%
+  );
+}
+
+/* Accent tags: acrylic tint without backdrop-filter (too many small blurs). */
+.glass-tag {
+  border: 0;
+  border-radius: 0;
+  color: rgb(210 245 255);
+  background-color: rgb(0 40 70 / 0.42);
+  background-image:
+    linear-gradient(
+      118deg,
+      transparent 18%,
+      rgb(255 255 255 / 0.12) 32%,
+      rgb(255 255 255 / 0.04) 40%,
+      transparent 55%
+    ),
+    linear-gradient(
+      135deg,
+      rgb(0 212 255 / 0.32) 0%,
+      rgb(168 85 247 / 0.28) 100%
+    );
+  box-shadow:
+    inset 0 0 0 1px rgb(0 30 50 / 0.45),
+    inset 0 0 18px -8px rgb(0 0 0 / 0.55),
+    inset 0 1px 0 rgb(255 255 255 / 0.18),
+    0 0 18px -10px rgb(0 212 255 / 0.35);
+}
+
+/* Hover only slides the glare and lets a hint of backlight through. */
+@media (hover: hover) {
+  .glass-pane.hover-glass:hover {
+    background-color: rgb(3 3 8 / 0.38);
+    background-position: 58% 58%, 0% 0%, 0% 0%;
+    --glass-backlight: 0 0 50px 2px rgb(0 212 255 / 0.07),
+      0 0 110px 20px rgb(0 212 255 / 0.05),
+      0 0 170px 44px rgb(168 85 247 / 0.045);
+  }
+
+  .glass-pane-inset.hover-glass:hover {
+    background-position: 58% 58%, 0% 0%;
+    --glass-backlight: 0 0 50px 2px rgb(0 212 255 / 0.05),
+      0 0 110px 20px rgb(0 212 255 / 0.035),
+      0 0 170px 44px rgb(168 85 247 / 0.03);
+  }
+}
+
+/* Accent glow utilities read as backlight strength on a pane. */
+:is(.glass-pane, .glass-pane-inset).accent-glow-sm {
+  --glass-backlight: 0 0 50px 2px rgb(0 212 255 / 0.08),
+    0 0 110px 20px rgb(0 212 255 / 0.05),
+    0 0 170px 44px rgb(168 85 247 / 0.04);
+}
+
+:is(.glass-pane, .glass-pane-inset).accent-glow-md {
+  --glass-backlight: 0 0 50px 2px rgb(0 212 255 / 0.12),
+    0 0 110px 20px rgb(0 212 255 / 0.08),
+    0 0 170px 44px rgb(168 85 247 / 0.06);
+}
+
+:is(.glass-pane, .glass-pane-inset).accent-glow-lg {
+  --glass-backlight: 0 0 50px 2px rgb(0 212 255 / 0.15),
+    0 0 110px 20px rgb(0 212 255 / 0.1),
+    0 0 170px 44px rgb(168 85 247 / 0.08);
+}
+
+:is(.glass-pane, .glass-pane-inset).accent-glow-xl {
+  --glass-backlight: 0 0 50px 2px rgb(0 212 255 / 0.18),
+    0 0 110px 20px rgb(0 212 255 / 0.13),
+    0 0 170px 44px rgb(168 85 247 / 0.1);
+}
+
+/* Section splits inside a pane: a dark seam with a faint glint, never a rule. */
+.glass-seam-b,
+.glass-seam-t {
+  position: relative;
+}
+
+.glass-seam-b::after,
+.glass-seam-t::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  pointer-events: none;
+  background-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgb(0 0 0 / 0.55) 14%,
+    rgb(255 255 255 / 0.07) 50%,
+    rgb(0 0 0 / 0.55) 86%,
+    transparent 100%
+  );
+}
+
+.glass-seam-b::after {
+  bottom: 0;
+}
+
+.glass-seam-t::after {
+  top: 0;
 }
 
 .timeline-dot {
@@ -203,21 +442,62 @@ body {
 }
 
 .timeline-card {
+  /* Tall media cards; auto-size estimate avoids scroll jumps. */
   content-visibility: auto;
-  contain-intrinsic-size: auto 200px;
+  contain-intrinsic-size: auto 320px;
+}
+
+/* Timeline cards skip live backdrop blur — dozens of frosted panes over a
+   moving canvas is the main scroll stutter source. Acrylic look stays via
+   the solid fill + glare gradients. */
+[data-timeline-card].glass-pane {
+  --glass-filter: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  background-color: rgb(2 2 6 / 0.72);
 }
 
 /* Plane-driven focus: the entry the plane is snapped to gets emphasized. */
 [data-timeline-entry] [data-timeline-card] {
-  transition: opacity 0.35s ease, border-color 0.35s ease,
-    box-shadow 0.35s ease, transform 0.35s ease;
+  transition: opacity 0.35s ease, transform 0.55s cubic-bezier(0.2, 0.7, 0.2, 1),
+    background-position 0.7s ease;
 }
 
+/* Focus is the only state that lights a card, and it arrives from behind. */
 [data-timeline-entry][data-focused="true"] [data-timeline-card] {
   opacity: 1;
-  border-color: color-mix(in srgb, var(--accent-blue) 55%, var(--accent-purple) 45%);
-  box-shadow: var(--accent-glow-lg);
-  transform: translateY(-2px);
+  background-color: rgb(4 4 10 / 0.36);
+  background-position: 62% 62%, 0% 0%, 0% 0%;
+  --glass-backlight: 0 0 50px 2px rgb(0 212 255 / 0.16),
+    0 0 110px 20px rgb(0 212 255 / 0.11),
+    0 0 170px 44px rgb(168 85 247 / 0.09);
+  transform: translateY(-3px);
+}
+
+/* Cards hang as tilted sheets and swing flat toward the viewer as the plane
+   reaches them. One perspective()+rotateY (no translateZ/rotateX stack) and
+   layer promotion only while focused/hovered. */
+@media (min-width: 768px) {
+  [data-timeline-card][data-timeline-side="left"] {
+    transform: perspective(1200px) rotateY(-6deg);
+    transform-origin: right center;
+  }
+
+  [data-timeline-card][data-timeline-side="right"] {
+    transform: perspective(1200px) rotateY(6deg);
+    transform-origin: left center;
+  }
+
+  [data-timeline-entry][data-focused="true"] [data-timeline-card] {
+    will-change: transform;
+    transform: perspective(1200px) rotateY(0deg) translateY(-6px);
+  }
+
+  [data-timeline-card]:hover,
+  [data-timeline-card]:focus-visible {
+    will-change: transform;
+    transform: perspective(1200px) rotateY(0deg) translateY(-6px);
+  }
 }
 
 [data-timeline-dot] {
@@ -334,5 +614,14 @@ body {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+
+  /* Without transitions the tilt would snap between states while scrolling. */
+  [data-timeline-card],
+  [data-timeline-card][data-timeline-side="left"],
+  [data-timeline-card][data-timeline-side="right"],
+  [data-timeline-card]:hover,
+  [data-timeline-entry][data-focused="true"] [data-timeline-card] {
+    transform: none;
   }
 }

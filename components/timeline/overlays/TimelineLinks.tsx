@@ -56,7 +56,7 @@ export function TimelineLinks({ links }: TimelineLinksProps) {
           href={link.href}
           target="_blank"
           rel="noopener noreferrer"
-          className="group inline-flex items-center gap-2 rounded-xl border border-white/10 bg-bg-subtle/50 px-4 py-2.5 text-sm font-medium text-text-primary transition-all duration-200 hover:-translate-y-0.5 hover:border-accent-blue/40 hover:text-accent-blue hover-accent-glow-sm"
+          className="group inline-flex items-center gap-2 glass-pane-inset hover-glass px-4 py-2.5 text-sm font-medium text-text-primary transition-transform duration-200 hover:-translate-y-0.5 hover:text-accent-blue"
         >
           <span className="text-text-muted transition-colors group-hover:text-accent-blue">
             {ICONS[link.icon ?? "external"]}

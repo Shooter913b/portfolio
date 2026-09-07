@@ -81,11 +81,11 @@ export function FeaturedCarousel({ posts, className }: FeaturedCarouselProps) {
 
       <Link
         href={`/log/${post.slug}`}
-        className="block overflow-hidden rounded-xl border border-white/5 bg-bg-elevated transition-all hover-accent-glow-sm hover:border-white/10"
+        className="glass-pane hover-glass block overflow-hidden"
       >
         <article>
           {featuredMedia.length > 0 && (
-            <div className="border-b border-white/5 [&_figure]:rounded-none [&_div]:rounded-none">
+            <div className="glass-seam-b [&_figure]:rounded-none [&_div]:rounded-none">
               <TimelineCardFeatured
                 items={featuredMedia}
                 variant="banner"

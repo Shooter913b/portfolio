@@ -16,7 +16,7 @@ type BusinessCardProps = {
 };
 
 const faceClasses =
-  "business-card accent-glow-xl relative overflow-visible rounded-3xl border border-white/10 bg-bg-elevated";
+  "business-card glass-pane accent-glow-xl relative overflow-visible";
 
 /** h-80: bottom of photo at 2/3 height + generous gap before name */
 const CONTENT_TOP = "pt-[16rem]";
@@ -44,7 +44,7 @@ export function BusinessCard({ site, profile, about, className }: BusinessCardPr
               profile={profile}
               sizeClassName="h-80 w-80"
               initialsClassName="text-7xl"
-              className="accent-glow-md rounded-[1.75rem] ring-[6px] ring-bg-elevated"
+              className="accent-glow-md ring-[6px] ring-bg-elevated"
             />
           </div>
 
@@ -80,7 +80,7 @@ export function BusinessCard({ site, profile, about, className }: BusinessCardPr
             <button
               type="button"
               onClick={() => setFlipped(true)}
-              className="accent-gradient-bg relative z-10 mt-6 flex w-full items-center justify-center gap-2.5 rounded-2xl px-5 py-4 text-base font-semibold text-bg-base shadow-[0_12px_36px_-12px_rgb(0_212_255/0.65)] transition-transform duration-200 hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-purple"
+              className="accent-gradient-bg relative z-10 mt-6 flex w-full items-center justify-center gap-2.5 px-5 py-4 text-base font-semibold text-bg-base shadow-[0_12px_36px_-12px_rgb(0_212_255/0.65)] transition-transform duration-200 hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-purple"
             >
               View more
               <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5" aria-hidden>

@@ -20,7 +20,7 @@ export function EducationDetail({ entry, titleId }: EducationDetailProps) {
     <div className="space-y-8">
       <TimelineDetailHeader entry={entry} titleId={titleId} />
 
-      <div className="rounded-2xl border border-white/5 bg-bg-base/40 p-5 sm:p-6">
+      <div className="glass-pane-inset p-5 sm:p-6">
         <SectionLabel>Overview</SectionLabel>
         <TimelineBody body={entry.body} />
       </div>

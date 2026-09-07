@@ -67,7 +67,7 @@ export function TimelineDetailHeader({ entry, titleId }: TimelineDetailHeaderPro
   return (
     <header className="relative">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <span className="accent-gradient-soft-bg inline-flex items-center gap-1.5 rounded-full px-3 py-1 font-mono text-[11px] uppercase tracking-[0.16em] text-accent-blue ring-1 ring-white/10">
+        <span className="glass-tag inline-flex items-center gap-1.5 px-3 py-1 font-mono text-[11px] uppercase tracking-[0.16em]">
           {meta.icon}
           {meta.label}
         </span>

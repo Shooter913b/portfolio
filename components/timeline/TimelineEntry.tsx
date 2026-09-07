@@ -28,10 +28,10 @@ export function TimelineEntry({ entry, site, index }: TimelineEntryProps) {
     );
 
   const cardClassName = cn(
-    "timeline-card rounded-xl border border-white/5 bg-bg-elevated transition-all duration-300 hover:border-white/10 hover-accent-glow-sm",
+    "timeline-card glass-pane hover-glass",
     entry.type === "resume" && "timeline-card-resume",
     isLeft ? "md:col-start-1" : "md:col-start-2",
-    isResume ? "p-6 opacity-90 hover:opacity-100" : "p-4 opacity-75 hover:opacity-90",
+    isResume ? "p-6 opacity-95 hover:opacity-100" : "p-4 opacity-85 hover:opacity-100",
     isNarrative && "w-full cursor-pointer appearance-none text-left font-inherit"
   );
 

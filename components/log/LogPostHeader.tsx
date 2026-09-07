@@ -39,7 +39,7 @@ export function LogPostHeader({ post, timelineRefs = [] }: LogPostHeaderProps) {
         )}
 
         {timelineRefs.length > 0 && (
-          <div className="mt-6 border-t border-white/5 pt-6">
+          <div className="glass-seam-t mt-6 pt-6">
             <p className="mb-3 font-mono text-[10px] uppercase tracking-wider text-text-muted">
               Related timeline
             </p>
@@ -52,7 +52,7 @@ export function LogPostHeader({ post, timelineRefs = [] }: LogPostHeaderProps) {
         )}
 
         {post.links.length > 0 && (
-          <div className="mt-6 border-t border-white/5 pt-6">
+          <div className="glass-seam-t mt-6 pt-6">
             <TimelineLinks links={post.links} />
           </div>
         )}

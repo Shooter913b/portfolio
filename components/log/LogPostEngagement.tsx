@@ -109,10 +109,10 @@ export function LogPostEngagement({ slug }: LogPostEngagementProps) {
                 aria-pressed={isActive}
                 aria-label={`${reaction} reaction${count > 0 ? `, ${count}` : ""}`}
                 className={cn(
-                  "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm transition-all",
+                  "glass-pane-inset inline-flex items-center gap-1.5 px-3 py-1.5 text-sm",
                   isActive
-                    ? "border-accent-blue/50 bg-accent-blue/15 text-accent-blue"
-                    : "border-white/10 bg-bg-subtle/50 text-text-primary hover:border-white/20"
+                    ? "accent-glow-sm text-accent-blue"
+                    : "hover-glass text-text-primary"
                 )}
               >
                 <span aria-hidden>{reaction}</span>

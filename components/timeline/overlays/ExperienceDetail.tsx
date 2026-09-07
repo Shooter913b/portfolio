@@ -30,7 +30,7 @@ export function ExperienceDetail({ entry, titleId }: ExperienceDetailProps) {
             : "space-y-8"
         }
       >
-        <div className="rounded-2xl border border-white/5 bg-bg-base/40 p-5 sm:p-6">
+        <div className="glass-pane-inset p-5 sm:p-6">
           <SectionLabel>Highlights</SectionLabel>
           <TimelineBody body={entry.body} />
         </div>

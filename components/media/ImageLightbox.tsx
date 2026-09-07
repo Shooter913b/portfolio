@@ -72,7 +72,7 @@ export function ImageLightbox({
           type="button"
           onClick={onClose}
           aria-label="Close"
-          className="absolute -right-1 -top-1 z-10 flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-bg-elevated text-text-muted shadow-lg transition-colors hover:border-accent-blue/40 hover:text-accent-blue focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-purple sm:-right-3 sm:-top-3"
+          className="glass-pane-inset hover-glass absolute -right-1 -top-1 z-10 flex h-9 w-9 items-center justify-center text-text-muted transition-colors hover:text-accent-blue focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-purple sm:-right-3 sm:-top-3"
         >
           <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4" aria-hidden>
             <path
@@ -84,7 +84,7 @@ export function ImageLightbox({
           </svg>
         </button>
 
-        <div className="overflow-hidden rounded-xl border border-white/10 bg-bg-subtle shadow-2xl accent-glow-md">
+        <div className="glass-pane overflow-hidden accent-glow-md">
           <Image
             src={src}
             alt={alt}

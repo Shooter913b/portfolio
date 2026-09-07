@@ -23,7 +23,7 @@ export function SkillDots({ level, className }: SkillDotsProps) {
         <span
           key={dot}
           className={cn(
-            "h-2 w-2 rounded-full transition-all duration-300",
+            "h-2 w-2 transition-all duration-300",
             dot <= level ? "" : "bg-white/10"
           )}
           style={

@@ -31,9 +31,9 @@ export function LogFilterDropdown({
           router.push(value ? `/log?related=${value}` : "/log");
         }}
         className={cn(
-          "w-full appearance-none rounded-xl border border-white/10 bg-bg-subtle py-2 pl-3 pr-9",
+          "glass-pane-inset hover-glass w-full appearance-none py-2 pl-3 pr-9",
           "font-mono text-xs text-text-primary",
-          "transition-colors hover:border-white/20 focus:border-accent-blue/40 focus:outline-none focus:ring-2 focus:ring-accent-blue/20"
+          "focus:outline-none focus:ring-2 focus:ring-accent-blue/20"
         )}
       >
         <option value="">All logs</option>

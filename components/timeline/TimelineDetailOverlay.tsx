@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useId, useLayoutEffect, useRef } from "react";
+import { useEffect, useId, useLayoutEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import type { BlogPost } from "@/lib/schemas/blog";
 import type { NarrativeEntry } from "@/lib/schemas/timeline";
@@ -32,6 +32,7 @@ export function TimelineDetailOverlay({
   const titleId = useId();
   const closeRef = useRef<HTMLButtonElement>(null);
   const flipRef = useRef<HTMLDivElement>(null);
+  const frontRef = useRef<HTMLDivElement>(null);
   const reducedMotion = useReducedMotion();
 
   useEffect(() => {
@@ -68,6 +69,8 @@ export function TimelineDetailOverlay({
     if (final.width === 0 || final.height === 0) return;
 
     const endDeg = side === "left" ? 180 : -180;
+    const front = frontRef.current;
+    if (front) front.style.visibility = "";
 
     let startTransform: string;
     if (originRect && originRect.width > 0 && originRect.height > 0) {
@@ -96,7 +99,15 @@ export function TimelineDetailOverlay({
       }
     );
 
-    return () => animation.cancel();
+    const hideFront = () => {
+      if (front) front.style.visibility = "hidden";
+    };
+    animation.addEventListener("finish", hideFront);
+
+    return () => {
+      animation.removeEventListener("finish", hideFront);
+      animation.cancel();
+    };
   }, [originRect, side, reducedMotion]);
 
   const content = (() => {
@@ -113,7 +124,7 @@ export function TimelineDetailOverlay({
   const maxWidth = entry.type === "experience" ? "max-w-4xl" : "max-w-3xl";
 
   const backFace = (
-    <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-bg-elevated shadow-2xl accent-glow-xl">
+    <div className="glass-pane glass-pane-opaque accent-glow-xl relative overflow-hidden">
       {/* Top gradient accent bar */}
       <div className="accent-gradient-bg h-1 w-full" aria-hidden />
 
@@ -136,7 +147,7 @@ export function TimelineDetailOverlay({
         type="button"
         onClick={onClose}
         aria-label="Close"
-        className="absolute right-4 top-5 z-10 flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-bg-base/60 text-text-muted backdrop-blur transition-colors hover:border-accent-blue/40 hover:text-accent-blue focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-purple"
+        className="glass-pane-inset glass-pane-opaque hover-glass absolute right-4 top-5 z-10 flex h-9 w-9 items-center justify-center text-text-muted transition-colors hover:text-accent-blue focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-purple"
       >
         <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4" aria-hidden>
           <path
@@ -164,7 +175,7 @@ export function TimelineDetailOverlay({
       <button
         type="button"
         className={cn(
-          "absolute inset-0 bg-bg-base/85 backdrop-blur-md",
+          "absolute inset-0 bg-bg-base/92 backdrop-blur-md",
           !reducedMotion && "animate-backdrop-in"
         )}
         aria-label="Close details"
@@ -202,8 +213,9 @@ export function TimelineDetailOverlay({
           >
             {/* FRONT — the timeline card, shown as the flip begins */}
             <div
+              ref={frontRef}
               aria-hidden
-              className="timeline-flip-face overflow-hidden rounded-xl border border-white/10 bg-bg-elevated p-4"
+              className="timeline-flip-face glass-pane glass-pane-opaque overflow-hidden p-4"
             >
               <TimelineCard entry={entry} />
             </div>

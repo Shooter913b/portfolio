@@ -18,7 +18,7 @@ export function ResumeBlock({ site }: ResumeBlockProps) {
       <p className="mt-2 text-sm text-text-muted">
         Last updated {site.resume.lastUpdated}
       </p>
-      <div className="mt-4 overflow-hidden rounded-lg border border-white/10">
+      <div className="glass-pane-inset mt-4 overflow-hidden">
         <ResumePreview src={site.resume.pdfPath} cacheKey={site.resume.lastUpdated} />
       </div>
       <div className="mt-4 flex flex-wrap gap-3">

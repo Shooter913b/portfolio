@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { PostTimelineRef } from "@/lib/log/timelineLabels";
 import { getTimelineTypeLabel } from "@/lib/log/timelineLabels";
+import { timelineEntryHref } from "@/lib/timeline/entryUrl";
 
 const BriefcaseIcon = (
   <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4" aria-hidden>
@@ -44,8 +45,8 @@ export function LogTimelineLink({ timelineRef }: LogTimelineLinkProps) {
 
   return (
     <Link
-      href={`/?entry=${timelineRef.id}#timeline`}
-      className="group inline-flex items-center gap-2 rounded-xl border border-white/10 bg-bg-subtle/50 px-4 py-2.5 text-sm font-medium text-text-primary transition-all duration-200 hover:-translate-y-0.5 hover:border-accent-blue/40 hover:text-accent-blue hover-accent-glow-sm"
+      href={timelineEntryHref(timelineRef.id)}
+      className="group inline-flex items-center gap-2 glass-pane-inset hover-glass px-4 py-2.5 text-sm font-medium text-text-primary transition-transform duration-200 hover:-translate-y-0.5 hover:text-accent-blue"
     >
       <span className="text-text-muted transition-colors group-hover:text-accent-blue">
         {ICONS[timelineRef.type]}

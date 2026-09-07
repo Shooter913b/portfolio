@@ -40,7 +40,7 @@ export function MediaCollage({
   return (
     <div
       className={cn(
-        "rounded-2xl border border-white/5 bg-bg-base/35 p-2.5 sm:p-3",
+        "glass-pane-inset p-2.5 sm:p-3",
         className
       )}
     >

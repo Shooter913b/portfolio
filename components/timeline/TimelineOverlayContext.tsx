@@ -11,6 +11,7 @@ import {
 import type { BlogPost } from "@/lib/schemas/blog";
 import type { NarrativeEntry } from "@/lib/schemas/timeline";
 import { postRelatesToTimelineEntry } from "@/lib/log/relatedTimeline";
+import { syncTimelineEntrySearchParam } from "@/lib/timeline/entryUrl";
 import { TimelineDetailOverlay } from "./TimelineDetailOverlay";
 import { TimelineDeepLink } from "./TimelineDeepLink";
 
@@ -68,12 +69,14 @@ export function TimelineOverlayProvider({
       originRect: DOMRect | null = null
     ) => {
       setOpen({ id, side, originRect });
+      syncTimelineEntrySearchParam(id);
     },
     []
   );
 
   const closeOverlay = useCallback(() => {
     setOpen(null);
+    syncTimelineEntrySearchParam(null);
   }, []);
 
   const activeEntry = useMemo(

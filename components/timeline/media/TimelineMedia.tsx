@@ -53,7 +53,7 @@ export function TimelineMedia({
       <figure className={cn("group w-full", className)}>
         <div
           className={cn(
-            "overflow-hidden rounded-xl border border-white/10 bg-bg-subtle ring-1 ring-white/5 transition-all duration-300 group-hover:border-accent-blue/30 group-hover:ring-accent-blue/20",
+            "overflow-hidden glass-pane-inset hover-glass",
             frameClass,
             isImage && "cursor-zoom-in"
           )}

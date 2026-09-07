@@ -57,7 +57,7 @@ function FeaturedPreview({
   return (
     <div
       className={cn(
-        "relative flex shrink-0 items-center justify-center overflow-hidden rounded-lg border border-white/10 bg-bg-subtle",
+        "relative flex shrink-0 items-center justify-center overflow-hidden glass-pane-inset",
         variant === "banner" && "aspect-[2/1] w-full",
         variant === "thumb" && "aspect-[5/3] w-full",
         variant === "inline" && "aspect-[5/3] w-full",

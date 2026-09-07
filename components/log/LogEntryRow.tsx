@@ -18,7 +18,7 @@ export function LogEntryRow({ post }: LogEntryRowProps) {
     <li>
       <Link
         href={`/log/${post.slug}`}
-        className="group block rounded-xl border border-white/5 bg-bg-elevated p-4 transition-all hover:border-white/10 hover-accent-glow-sm sm:p-5"
+        className="glass-pane hover-glass group block p-4 sm:p-5"
       >
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
           <LogEntryThumbnail post={post} />

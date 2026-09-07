@@ -20,12 +20,23 @@ export function ProfilePhoto({
   return (
     <div
       className={cn(
-        "accent-glow-sm rounded-2xl bg-gradient-to-br from-accent-blue via-accent-blue/80 to-accent-purple p-[2px]",
+        "relative overflow-hidden bg-bg-elevated",
+        "shadow-[inset_0_0_0_1px_rgb(0_0_0/0.65),inset_0_0_24px_-8px_rgb(0_0_0/0.7),0_0_28px_-6px_rgb(0_212_255/0.45),0_0_56px_-10px_rgb(168_85_247/0.4)]",
         sizeClassName,
         className
       )}
     >
-      <div className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-[14px] bg-bg-elevated">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 z-[1]"
+        style={{
+          boxShadow:
+            "inset 0 1px 0 rgb(255 255 255 / 0.14), inset 0 -20px 36px -24px rgb(0 212 255 / 0.2)",
+          background:
+            "linear-gradient(118deg, transparent 22%, rgb(255 255 255 / 0.06) 32%, transparent 48%)",
+        }}
+      />
+      <div className="relative flex h-full w-full items-center justify-center overflow-hidden">
         {photo.src ? (
           <Image
             src={photo.src}

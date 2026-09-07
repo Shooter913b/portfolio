@@ -14,8 +14,8 @@ export function FlightLogBoard({
   headerAside,
 }: FlightLogBoardProps) {
   return (
-    <section className="overflow-hidden rounded-xl border border-white/5 bg-bg-elevated/80 backdrop-blur-sm">
-      <header className="flex flex-wrap items-center justify-between gap-3 border-b border-white/5 px-5 py-4 sm:px-6">
+    <section className="glass-pane-board overflow-hidden">
+      <header className="glass-seam-b flex flex-wrap items-center justify-between gap-3 px-5 py-4 sm:px-6">
         <div>
           <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-text-muted">
             All logs

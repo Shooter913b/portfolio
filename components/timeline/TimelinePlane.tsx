@@ -15,24 +15,26 @@ import { PaperPlaneSvg } from "@/components/ui/PaperPlaneSvg";
 
 const PLANE_W = 38;
 const PLANE_H = 28;
-// Plane center offset from the spine, into the empty column opposite the card.
 const EDGE_OFFSET = 48;
-// Where on screen the focused dot wants to settle (fraction of viewport h).
 const FOCUS_LINE = 0.42;
-// Resting heading magnitude (deg); a slight bow-up glide.
 const BASE_ROT = 25;
-// Idle flight motion.
 const BOB_AMP = 8;
 const BOB_FREQ = 2.1;
 const SWAY_AMP = 6;
 const SWAY_FREQ = 1.45;
 const ROCK_AMP = 5;
 const ROCK_FREQ = 1.05;
-// Pitch coupling: nose leads the climb/descent of the idle path + scroll travel.
 const PITCH_K = 18;
 const TRAVEL_PITCH_K = 0.9;
-// Exponential smoothing time constant (ms) — lower = snappier snap.
 const TAU_MS = 127;
+/** Layout / focus picking is cheaper than every paint frame. */
+const LAYOUT_MS = 48;
+
+type CachedEntry = {
+  el: HTMLElement;
+  dot: HTMLElement;
+  side: "left" | "right";
+};
 
 export function TimelinePlane() {
   const planeRef = useRef<HTMLDivElement | null>(null);
@@ -59,7 +61,30 @@ export function TimelinePlane() {
     let initialized = false;
     let focusedEl: Element | null = null;
     let lastTime = 0;
-    let mirror = false; // sprite faces left when true
+    let lastLayout = 0;
+    let mirror = false;
+
+    let cachedEntries: CachedEntry[] = [];
+    let rootEl: HTMLElement | null = null;
+    let best: { el: HTMLElement; y: number; d: number; side: "left" | "right" } | null =
+      null;
+    let mobileHidden = true;
+    let inView = true;
+
+    const refreshCache = () => {
+      rootEl = document.querySelector<HTMLElement>("[data-timeline-root]");
+      cachedEntries = Array.from(
+        document.querySelectorAll<HTMLElement>("[data-timeline-entry]")
+      ).flatMap((el) => {
+        const dot = el.querySelector<HTMLElement>("[data-timeline-dot]");
+        if (!dot) return [];
+        const card = el.querySelector<HTMLElement>("[data-timeline-card]");
+        const sideAttr = card?.getAttribute("data-timeline-side");
+        const side: "left" | "right" =
+          sideAttr === "left" || sideAttr === "right" ? sideAttr : "right";
+        return [{ el, dot, side }];
+      });
+    };
 
     const setFocused = (el: Element | null, side?: "left" | "right") => {
       if (!el) {
@@ -93,43 +118,49 @@ export function TimelinePlane() {
       svg.style.transform = `scaleX(${mirror ? -1 : 1})`;
     };
 
-    const tick = (now: number) => {
-      if (!lastTime) lastTime = now;
-      const dt = Math.min(now - lastTime, 64);
-      lastTime = now;
-      const t = now / 1000;
-
-      const entries = Array.from(
-        document.querySelectorAll<HTMLElement>("[data-timeline-entry]")
-      );
+    const updateLayout = () => {
+      if (cachedEntries.length === 0) refreshCache();
 
       const focusY = window.innerHeight * FOCUS_LINE;
       const maxScroll =
         document.documentElement.scrollHeight - window.innerHeight;
       const atBottom = window.scrollY >= maxScroll - 8;
 
-      let best: { el: HTMLElement; y: number; d: number } | null = null;
-      let mobileHidden = true;
+      best = null;
+      mobileHidden = true;
 
-      for (const entry of entries) {
-        const dot = entry.querySelector<HTMLElement>("[data-timeline-dot]");
-        if (!dot) continue;
-        const r = dot.getBoundingClientRect();
+      for (const entry of cachedEntries) {
+        const r = entry.dot.getBoundingClientRect();
         if (r.width === 0 && r.height === 0) continue;
         mobileHidden = false;
         const cy = r.top + r.height / 2;
-        // Near page bottom, only consider dots that can still reach the focus band.
         if (atBottom && cy > focusY + 80) continue;
         const d = Math.abs(cy - focusY);
-        if (!best || d < best.d) best = { el: entry, y: cy, d };
+        if (!best || d < best.d) {
+          best = { el: entry.el, y: cy, d, side: entry.side };
+        }
       }
 
-      const root = document.querySelector<HTMLElement>("[data-timeline-root]");
-      const rootRect = root?.getBoundingClientRect();
-      const inView =
+      if (!rootEl) {
+        rootEl = document.querySelector<HTMLElement>("[data-timeline-root]");
+      }
+      const rootRect = rootEl?.getBoundingClientRect();
+      inView =
         !!rootRect &&
         rootRect.top < window.innerHeight * 0.85 &&
         rootRect.bottom > window.innerHeight * 0.15;
+    };
+
+    const tick = (now: number) => {
+      if (!lastTime) lastTime = now;
+      const dt = Math.min(now - lastTime, 64);
+      lastTime = now;
+      const t = now / 1000;
+
+      if (now - lastLayout >= LAYOUT_MS) {
+        lastLayout = now;
+        updateLayout();
+      }
 
       if (mobileHidden || !best || !inView) {
         setFocused(null);
@@ -144,20 +175,14 @@ export function TimelinePlane() {
         return;
       }
 
-      const card = best.el.querySelector<HTMLElement>("[data-timeline-card]");
-      const side = card?.getAttribute("data-timeline-side") ?? "right";
-      const isRightBlock = side === "right";
+      const isRightBlock = best.side === "right";
       const dockLeft = isRightBlock;
       const focusSide: "left" | "right" = dockLeft ? "left" : "right";
 
       setFocused(best.el, focusSide);
       plane.style.opacity = "1";
 
-      // The plane sits on the side OPPOSITE the focused card and points across
-      // the spine toward it: right-side block -> plane on the left (facing
-      // right), left-side block -> plane on the right (facing left).
-      setMirror(!dockLeft); // on left -> faces right (unmirrored); on right -> mirrored
-      // s = facing sign: +1 faces right, -1 faces left.
+      setMirror(!dockLeft);
       const s = dockLeft ? 1 : -1;
 
       const spineX = window.innerWidth / 2;
@@ -177,7 +202,6 @@ export function TimelinePlane() {
       const dist = Math.hypot(targetX - curX, targetY - curY);
       const settle = Math.max(0, Math.min(1, 1 - dist / 160));
 
-      // Scroll-travel vertical velocity (px/ms) -> pitch while flying between points.
       const vy = (curY - prevY) / (dt || 16);
       prevY = curY;
 
@@ -186,7 +210,6 @@ export function TimelinePlane() {
       let rot = s * BASE_ROT;
 
       if (!reduced) {
-        // Undulating hover path (ellipse) with pitch coupled to its vertical velocity.
         const bobPhase = t * BOB_FREQ;
         bobY = Math.sin(bobPhase) * BOB_AMP * settle;
         swayX = s * Math.cos(t * SWAY_FREQ) * SWAY_AMP * settle;
@@ -208,6 +231,7 @@ export function TimelinePlane() {
       if (running) return;
       running = true;
       lastTime = 0;
+      lastLayout = 0;
       rafRef.current = requestAnimationFrame(tick);
     };
 
@@ -219,9 +243,6 @@ export function TimelinePlane() {
       }
     };
 
-    // Only drive the loop when it can actually be seen: desktop viewport, tab
-    // visible, and the timeline scrolled into view. The plane is `hidden` below
-    // md, so without these gates we'd burn frames + layout reads for nothing.
     const desktopMq = window.matchMedia("(min-width: 768px)");
     let desktop = desktopMq.matches;
     let visible = !document.hidden;
@@ -246,6 +267,8 @@ export function TimelinePlane() {
       sync();
     };
 
+    refreshCache();
+
     const root = document.querySelector("[data-timeline-root]");
     const observer = root
       ? new IntersectionObserver(
@@ -258,15 +281,30 @@ export function TimelinePlane() {
       : null;
     observer?.observe(root!);
 
+    const mutation = root
+      ? new MutationObserver(() => {
+          refreshCache();
+        })
+      : null;
+    mutation?.observe(root!, { childList: true, subtree: true });
+
+    const onResize = () => {
+      refreshCache();
+      lastLayout = 0;
+    };
+
     desktopMq.addEventListener("change", onDesktopChange);
     document.addEventListener("visibilitychange", onVisibility);
+    window.addEventListener("resize", onResize, { passive: true });
     sync();
 
     return () => {
       stop();
       observer?.disconnect();
+      mutation?.disconnect();
       desktopMq.removeEventListener("change", onDesktopChange);
       document.removeEventListener("visibilitychange", onVisibility);
+      window.removeEventListener("resize", onResize);
       setFocused(null);
     };
   }, []);

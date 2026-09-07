@@ -47,10 +47,8 @@ export function GalleryTile({ item, className, priority = false }: GalleryTilePr
     <>
       <figure
         className={cn(
-          "group/tile relative h-full min-h-0 w-full overflow-hidden rounded-xl",
-          "border border-white/8 bg-bg-subtle ring-1 ring-white/5",
-          "transition-[border-color,box-shadow,transform] duration-300",
-          "hover:border-accent-blue/30 hover:ring-accent-blue/15 hover:shadow-[0_12px_32px_-20px_rgb(0_212_255/0.45)]",
+          "group/tile relative h-full min-h-0 w-full overflow-hidden",
+          "glass-pane-inset hover-glass",
           className
         )}
       >

@@ -57,13 +57,13 @@ export function MediaCarousel({
   return (
     <div
       ref={rootRef}
-      className={cn("overflow-hidden rounded-xl border border-white/10 bg-bg-subtle", className)}
+      className={cn("glass-pane overflow-hidden", className)}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
       <TimelineMedia item={item} variant="hero" />
 
-      <div className={cn("border-t border-white/5 px-5 py-4 sm:px-6", controlsClassName)}>
+      <div className={cn("glass-seam-t px-5 py-4 sm:px-6", controlsClassName)}>
         <MediaCarouselControls
           count={items.length}
           index={index}

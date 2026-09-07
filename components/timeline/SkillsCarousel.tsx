@@ -78,7 +78,7 @@ export function SkillsCarousel({
           data-timeline-card
           data-timeline-side={isLeft ? "left" : "right"}
           className={cn(
-            "rounded-xl border border-white/5 bg-bg-elevated p-6 opacity-90 transition-all duration-300 hover:border-white/10 hover-accent-glow-sm hover:opacity-100",
+            "glass-pane hover-glass p-6 opacity-95 hover:opacity-100",
             isLeft ? "md:col-start-1" : "md:col-start-2"
           )}
         >
