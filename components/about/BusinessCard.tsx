@@ -44,7 +44,7 @@ export function BusinessCard({ site, profile, about, className }: BusinessCardPr
               profile={profile}
               sizeClassName="h-80 w-80"
               initialsClassName="text-7xl"
-              className="accent-glow-md ring-[6px] ring-bg-elevated"
+              className="ring-[6px] ring-bg-elevated"
             />
           </div>
 

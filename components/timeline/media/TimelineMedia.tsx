@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import type { TimelineMediaItem } from "@/lib/schemas/timeline-media";
 import { YouTubeEmbed } from "@/components/media/YouTubeEmbed";
 import { ImageLightbox } from "@/components/media/ImageLightbox";
+import { captureVideoPoster } from "@/lib/media/captureVideoPoster";
 import { cn } from "@/lib/cn";
 
 type TimelineMediaProps = {
@@ -24,6 +25,41 @@ function imageMaxHeight(variant: "hero" | "gallery" | "stack") {
     default:
       return "max-h-[min(65vh,640px)]";
   }
+}
+
+function AutoPosterVideo({
+  src,
+  poster,
+  className,
+}: {
+  src: string;
+  poster?: string;
+  className?: string;
+}) {
+  const [autoPoster, setAutoPoster] = useState<string | undefined>();
+
+  useEffect(() => {
+    if (poster || !src) return;
+    let cancelled = false;
+    captureVideoPoster(src).then((frame) => {
+      if (!cancelled && frame) setAutoPoster(frame);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [src, poster]);
+
+  return (
+    <video
+      src={src}
+      poster={poster ?? autoPoster}
+      controls
+      playsInline
+      preload="metadata"
+      className={className}
+      onClick={(event) => event.stopPropagation()}
+    />
+  );
 }
 
 export function TimelineMedia({
@@ -68,7 +104,11 @@ export function TimelineMedia({
           }}
           role={isImage ? "button" : undefined}
           tabIndex={isImage ? 0 : undefined}
-          aria-label={isImage ? `View full image: ${item.alt ?? item.caption ?? "image"}` : undefined}
+          aria-label={
+            isImage
+              ? `View full image: ${item.alt ?? item.caption ?? "image"}`
+              : undefined
+          }
         >
           {item.type === "youtube" ? (
             <YouTubeEmbed
@@ -77,14 +117,10 @@ export function TimelineMedia({
               className="absolute inset-0 h-full w-full"
             />
           ) : item.type === "video" ? (
-            <video
+            <AutoPosterVideo
               src={item.src}
               poster={item.poster}
-              controls
-              playsInline
-              preload="metadata"
               className="absolute inset-0 h-full w-full object-contain"
-              onClick={(event) => event.stopPropagation()}
             />
           ) : fill ? (
             <Image

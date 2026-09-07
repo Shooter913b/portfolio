@@ -7,6 +7,7 @@ import {
   buildUploadPath,
   IMAGE_ACCEPT,
 } from "@/lib/admin/assets";
+import { posterFileFromVideo } from "@/lib/media/captureVideoPoster";
 import { AssetUploadField } from "./AssetUploadField";
 import {
   Button,
@@ -46,8 +47,39 @@ export function TimelineMediaEditor({
   ) => {
     const path = buildUploadPath(assetFolder, file);
     const result = await uploadAsset(path, file);
-    update(index, { [field]: result.publicPath });
-    onStatus?.(`Uploaded ${result.publicPath}. Save to commit.`);
+    const patch: Partial<TimelineMediaItem> = { [field]: result.publicPath };
+
+    // Auto-generate a poster when uploading a video that has none yet.
+    if (
+      field === "src" &&
+      media[index]?.type === "video" &&
+      !media[index]?.poster
+    ) {
+      onStatus?.(`Uploaded ${result.publicPath}. Generating poster…`);
+      try {
+        const posterFile = await posterFileFromVideo(file);
+        if (posterFile) {
+          const posterPath = buildUploadPath(assetFolder, posterFile);
+          const posterResult = await uploadAsset(posterPath, posterFile);
+          patch.poster = posterResult.publicPath;
+          onStatus?.(
+            `Uploaded ${result.publicPath} + poster ${posterResult.publicPath}. Save to commit.`
+          );
+        } else {
+          onStatus?.(
+            `Uploaded ${result.publicPath}. Could not auto-generate poster — upload one manually if needed.`
+          );
+        }
+      } catch {
+        onStatus?.(
+          `Uploaded ${result.publicPath}. Poster auto-generate failed — upload one manually if needed.`
+        );
+      }
+    } else {
+      onStatus?.(`Uploaded ${result.publicPath}. Save to commit.`);
+    }
+
+    update(index, patch);
   };
 
   return (
@@ -58,7 +90,10 @@ export function TimelineMediaEditor({
             <p className="text-xs font-medium uppercase tracking-wide text-[#8888a0]">
               Media {index + 1}
             </p>
-            <Button variant="ghost" onClick={() => onChange(media.filter((_, i) => i !== index))}>
+            <Button
+              variant="ghost"
+              onClick={() => onChange(media.filter((_, i) => i !== index))}
+            >
               Remove
             </Button>
           </div>
@@ -99,13 +134,15 @@ export function TimelineMediaEditor({
           />
           <TextInput
             value={item.caption ?? ""}
-            onChange={(e) => update(index, { caption: e.target.value || undefined })}
+            onChange={(e) =>
+              update(index, { caption: e.target.value || undefined })
+            }
             placeholder="Caption (optional)"
           />
 
           {item.type === "video" && (
             <AssetUploadField
-              label="Poster image (optional)"
+              label="Poster image (optional — auto-generated on video upload)"
               value={item.poster}
               accept={IMAGE_ACCEPT}
               emptyLabel="Upload poster"
@@ -132,7 +169,10 @@ export function TimelineMediaEditor({
         <Button
           variant="secondary"
           onClick={() =>
-            onChange([...media, { type: "image", src: "", alt: "", featured: false }])
+            onChange([
+              ...media,
+              { type: "image", src: "", alt: "", featured: false },
+            ])
           }
         >
           Add image
@@ -140,7 +180,10 @@ export function TimelineMediaEditor({
         <Button
           variant="secondary"
           onClick={() =>
-            onChange([...media, { type: "video", src: "", alt: "", featured: false }])
+            onChange([
+              ...media,
+              { type: "video", src: "", alt: "", featured: false },
+            ])
           }
         >
           Add video
@@ -148,7 +191,10 @@ export function TimelineMediaEditor({
         <Button
           variant="secondary"
           onClick={() =>
-            onChange([...media, { type: "youtube", src: "", alt: "", featured: false }])
+            onChange([
+              ...media,
+              { type: "youtube", src: "", alt: "", featured: false },
+            ])
           }
         >
           Add YouTube

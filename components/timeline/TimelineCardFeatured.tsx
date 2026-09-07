@@ -5,6 +5,7 @@ import Image from "next/image";
 import type { TimelineMediaItem } from "@/lib/schemas/timeline-media";
 import { ImageLightbox } from "@/components/media/ImageLightbox";
 import { MediaCarouselControls } from "@/components/media/MediaCarouselControls";
+import { VideoThumbnail } from "@/components/media/VideoThumbnail";
 import {
   getMediaPreviewSrc,
   isPlayableMedia,
@@ -53,6 +54,10 @@ function FeaturedPreview({
   const previewSrc = getMediaPreviewSrc(item);
   const playable = isPlayableMedia(item);
   const expandable = item.type === "image" && Boolean(onExpandImage);
+  const sizes =
+    variant === "inline"
+      ? "(max-width: 1024px) 100vw, 224px"
+      : "(max-width: 768px) 100vw, 320px";
 
   return (
     <div
@@ -84,17 +89,21 @@ function FeaturedPreview({
           : undefined
       }
     >
-      {previewSrc ? (
+      {item.type === "video" ? (
+        <VideoThumbnail
+          src={item.src}
+          poster={item.poster}
+          alt={item.alt ?? item.caption ?? ""}
+          objectFit="contain"
+          sizes={sizes}
+        />
+      ) : previewSrc ? (
         <Image
           src={previewSrc}
           alt={item.alt ?? item.caption ?? ""}
           fill
           className="object-contain"
-          sizes={
-            variant === "inline"
-              ? "(max-width: 1024px) 100vw, 224px"
-              : "(max-width: 768px) 100vw, 320px"
-          }
+          sizes={sizes}
         />
       ) : (
         <div className="flex h-full w-full items-center justify-center bg-bg-subtle font-mono text-[10px] uppercase tracking-wider text-text-muted">

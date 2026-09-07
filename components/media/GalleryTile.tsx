@@ -5,9 +5,8 @@ import Image from "next/image";
 import type { TimelineMediaItem } from "@/lib/schemas/timeline-media";
 import { ImageLightbox } from "@/components/media/ImageLightbox";
 import { YouTubeEmbed } from "@/components/media/YouTubeEmbed";
-import {
-  getMediaPreviewSrc,
-} from "@/lib/timeline/featuredMedia";
+import { VideoThumbnail } from "@/components/media/VideoThumbnail";
+import { getMediaPreviewSrc } from "@/lib/timeline/featuredMedia";
 import { cn } from "@/lib/cn";
 
 type GalleryTileProps = {
@@ -91,6 +90,16 @@ export function GalleryTile({ item, className, priority = false }: GalleryTilePr
               preload="metadata"
               className="absolute inset-0 h-full w-full object-cover"
               onClick={(event) => event.stopPropagation()}
+            />
+          ) : item.type === "video" ? (
+            <VideoThumbnail
+              src={item.src}
+              poster={item.poster}
+              alt={item.alt ?? ""}
+              objectFit="cover"
+              priority={priority}
+              sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 220px"
+              className="absolute inset-0 transition-transform duration-500 ease-out group-hover/tile:scale-[1.04]"
             />
           ) : previewSrc ? (
             <Image
