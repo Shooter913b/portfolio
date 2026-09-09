@@ -161,11 +161,7 @@ export function ContactActions({ site, about, onFlipBack }: ContactActionsProps)
         href="/"
         className="accent-gradient-bg accent-glow-cta group relative mt-5 flex items-center justify-between gap-3 overflow-hidden px-5 py-4 text-bg-base transition-transform duration-200 hover:-translate-y-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-purple"
       >
-        <span
-          aria-hidden
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgb(255_255_255/0.22)_1px,transparent_0)] [background-size:14px_14px] opacity-60"
-        />
-        <span className="relative">
+        <span>
           <span className="block text-base font-bold">Explore portfolio</span>
           <span className="block text-xs font-medium text-bg-base/80">
             Projects, experience &amp; more
@@ -174,7 +170,7 @@ export function ContactActions({ site, about, onFlipBack }: ContactActionsProps)
         <svg
           viewBox="0 0 24 24"
           fill="none"
-          className="relative h-5 w-5 transition-transform duration-200 group-hover:translate-x-1"
+          className="h-5 w-5 transition-transform duration-200 group-hover:translate-x-1"
           aria-hidden
         >
           <path
