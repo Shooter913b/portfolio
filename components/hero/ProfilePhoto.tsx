@@ -18,19 +18,7 @@ export function ProfilePhoto({
   const { photo } = profile;
 
   return (
-    <div className={cn("relative", sizeClassName, className)}>
-      {/* Square backlight: a sharp plate behind the photo — no drawn border. */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -inset-4 -z-10 rounded-none"
-        style={{
-          background:
-            "linear-gradient(135deg, rgb(0 212 255 / 0.45), rgb(168 85 247 / 0.38))",
-          filter: "blur(18px)",
-          opacity: 0.75,
-        }}
-      />
-
+    <div className={cn("accent-glow-halo relative", sizeClassName, className)}>
       <div
         className="relative h-full w-full overflow-hidden rounded-none bg-bg-elevated"
         style={{

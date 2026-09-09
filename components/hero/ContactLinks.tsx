@@ -5,13 +5,13 @@ export function ContactLinks() {
     <div className="flex flex-wrap items-center gap-3">
       <Link
         href="/about"
-        className="accent-gradient-bg inline-flex items-center justify-center gap-2 px-6 py-3 text-base font-semibold text-bg-base shadow-[0_12px_36px_-12px_rgb(0_212_255/0.65)] transition-transform duration-200 hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-purple"
+        className="accent-gradient-bg accent-glow-cta inline-flex items-center justify-center gap-2 px-6 py-3 text-base font-semibold text-bg-base transition-transform duration-200 hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-purple"
       >
         About / Contact
       </Link>
       <Link
         href="/log"
-        className="glass-pane hover-glass inline-flex items-center justify-center gap-2 px-6 py-3 text-base font-semibold text-text-primary transition-transform duration-200 hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-purple"
+        className="glass-pane hover-glass accent-glow-button-lift inline-flex items-center justify-center gap-2 px-6 py-3 text-base font-semibold text-text-primary transition-transform duration-200 hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-purple"
       >
         View logs
       </Link>

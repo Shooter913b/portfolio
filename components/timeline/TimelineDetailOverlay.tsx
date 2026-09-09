@@ -147,9 +147,9 @@ export function TimelineDetailOverlay({
         type="button"
         onClick={onClose}
         aria-label="Close"
-        className="glass-pane-inset glass-pane-opaque hover-glass absolute right-4 top-5 z-10 flex h-9 w-9 items-center justify-center text-text-muted transition-colors hover:text-accent-blue focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-purple"
+        className="absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center text-text-muted transition-colors hover:text-accent-blue focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-purple sm:right-5 sm:top-5"
       >
-        <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4" aria-hidden>
+        <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5" aria-hidden>
           <path
             d="m6 6 12 12M18 6 6 18"
             stroke="currentColor"

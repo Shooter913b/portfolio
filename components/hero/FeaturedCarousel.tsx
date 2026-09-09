@@ -81,7 +81,7 @@ export function FeaturedCarousel({ posts, className }: FeaturedCarouselProps) {
 
       <Link
         href={`/log/${post.slug}`}
-        className="glass-pane hover-glass block overflow-hidden"
+        className="featured-pane glass-pane hover-glass block overflow-hidden"
       >
         <article>
           {featuredMedia.length > 0 && (

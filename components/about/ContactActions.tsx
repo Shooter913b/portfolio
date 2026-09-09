@@ -159,7 +159,7 @@ export function ContactActions({ site, about, onFlipBack }: ContactActionsProps)
 
       <Link
         href="/"
-        className="accent-gradient-bg group relative mt-5 flex items-center justify-between gap-3 overflow-hidden px-5 py-4 text-bg-base shadow-[0_14px_40px_-12px_rgb(0_212_255/0.7)] transition-transform duration-200 hover:-translate-y-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-purple"
+        className="accent-gradient-bg accent-glow-cta group relative mt-5 flex items-center justify-between gap-3 overflow-hidden px-5 py-4 text-bg-base transition-transform duration-200 hover:-translate-y-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-purple"
       >
         <span
           aria-hidden

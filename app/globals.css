@@ -19,15 +19,73 @@
     rgb(0 212 255 / 0.14) 0%,
     rgb(168 85 247 / 0.14) 100%
   );
-  --accent-glow-sm: 0 0 10px rgb(0 212 255 / 0.35),
-    0 0 20px rgb(168 85 247 / 0.25);
-  --accent-glow-md: 0 0 14px 3px rgb(0 212 255 / 0.45),
-    0 0 28px 6px rgb(168 85 247 / 0.35);
-  --accent-glow-lg: 0 0 24px -6px rgb(0 212 255 / 0.28),
-    0 14px 40px -16px rgb(0 212 255 / 0.35),
-    0 24px 60px -24px rgb(168 85 247 / 0.3);
-  --accent-glow-xl: 0 24px 80px -32px rgb(0 212 255 / 0.28),
-    0 32px 100px -40px rgb(168 85 247 / 0.32);
+
+  /*
+   * Standardized blue→purple glow (keep in sync with lib/theme/accents.ts).
+   * Four corner lobes (cyan NW → purple SE). Never use negative spread —
+   * that shrinks the silhouette and blur rounds the corners. Blur stays
+   * modest vs offset; spread ≥ 0 so the square plate reaches the tips.
+   */
+  --glow-backlight-off: -10px -10px 12px 0 rgb(0 212 255 / 0),
+    10px -10px 12px 0 rgb(84 148 251 / 0),
+    10px 10px 12px 0 rgb(168 85 247 / 0),
+    -10px 10px 12px 0 rgb(84 148 251 / 0);
+  --glow-backlight-xs: -8px -8px 10px 0 rgb(0 212 255 / 0.11),
+    8px -8px 10px 0 rgb(84 148 251 / 0.08),
+    8px 8px 10px 0 rgb(168 85 247 / 0.11),
+    -8px 8px 10px 0 rgb(84 148 251 / 0.08);
+  --glow-backlight-sm: -10px -10px 12px 0 rgb(0 212 255 / 0.13),
+    10px -10px 12px 0 rgb(84 148 251 / 0.09),
+    10px 10px 12px 0 rgb(168 85 247 / 0.13),
+    -10px 10px 12px 0 rgb(84 148 251 / 0.09);
+  --glow-backlight-md: -12px -12px 14px 0 rgb(0 212 255 / 0.15),
+    12px -12px 14px 0 rgb(84 148 251 / 0.1),
+    12px 12px 14px 0 rgb(168 85 247 / 0.15),
+    -12px 12px 14px 0 rgb(84 148 251 / 0.1);
+  --glow-backlight-lg: -14px -14px 16px 0 rgb(0 212 255 / 0.17),
+    14px -14px 16px 0 rgb(84 148 251 / 0.11),
+    14px 14px 16px 0 rgb(168 85 247 / 0.17),
+    -14px 14px 16px 0 rgb(84 148 251 / 0.11);
+  --glow-backlight-xl: -16px -16px 18px 0 rgb(0 212 255 / 0.19),
+    16px -16px 18px 0 rgb(84 148 251 / 0.12),
+    16px 16px 18px 0 rgb(168 85 247 / 0.19),
+    -16px 16px 18px 0 rgb(84 148 251 / 0.12);
+
+  /* Timeline cards + featured pane: farther square halo, low density. */
+  --glow-backlight-card: -15px -15px 18px 0 rgb(0 212 255 / 0.08),
+    15px -15px 18px 0 rgb(84 148 251 / 0.055),
+    15px 15px 18px 0 rgb(168 85 247 / 0.08),
+    -15px 15px 18px 0 rgb(84 148 251 / 0.055);
+  --glow-backlight-card-strong: -18px -18px 21px 0 rgb(0 212 255 / 0.1),
+    18px -18px 21px 0 rgb(84 148 251 / 0.07),
+    18px 18px 21px 0 rgb(168 85 247 / 0.1),
+    -18px 18px 21px 0 rgb(84 148 251 / 0.07);
+
+  /* Buttons only — much quieter than pane backlights. */
+  --glow-backlight-button: -6px -6px 8px 0 rgb(0 212 255 / 0.05),
+    6px -6px 8px 0 rgb(84 148 251 / 0.035),
+    6px 6px 8px 0 rgb(168 85 247 / 0.05),
+    -6px 6px 8px 0 rgb(84 148 251 / 0.035);
+  /* Slightly stronger than button — secondary CTAs like View logs. */
+  --glow-backlight-button-lift: -7px -7px 10px 0 rgb(0 212 255 / 0.08),
+    7px -7px 10px 0 rgb(84 148 251 / 0.055),
+    7px 7px 10px 0 rgb(168 85 247 / 0.08),
+    -7px 7px 10px 0 rgb(84 148 251 / 0.055);
+
+  --accent-glow-xs: var(--glow-backlight-xs);
+  --accent-glow-sm: var(--glow-backlight-sm);
+  --accent-glow-md: var(--glow-backlight-md);
+  --accent-glow-lg: var(--glow-backlight-lg);
+  --accent-glow-xl: var(--glow-backlight-xl);
+  --accent-glow-button: var(--glow-backlight-button);
+  --accent-glow-button-lift: var(--glow-backlight-button-lift);
+
+  /* Halo plate: true 135° wrap (cyan → purple around the shape). */
+  --accent-glow-halo: linear-gradient(
+    135deg,
+    rgb(0 212 255 / 0.32) 0%,
+    rgb(168 85 247 / 0.28) 100%
+  );
 }
 
 @theme inline {
@@ -92,6 +150,10 @@ body {
   color: transparent;
 }
 
+.accent-glow-xs {
+  box-shadow: var(--accent-glow-xs);
+}
+
 .accent-glow-sm {
   box-shadow: var(--accent-glow-sm);
 }
@@ -108,6 +170,43 @@ body {
   box-shadow: var(--accent-glow-xl);
 }
 
+/* Quiet resting glow for buttons / CTA controls only. */
+.accent-glow-button {
+  box-shadow: var(--accent-glow-button);
+}
+
+.accent-glow-button-lift {
+  box-shadow: var(--accent-glow-button-lift);
+}
+
+/* Soft CTA lift — no negative spread (that rounds corners). */
+.accent-glow-cta {
+  box-shadow: -10px -10px 16px 0 rgb(0 212 255 / 0.1),
+    10px -10px 16px 0 rgb(84 148 251 / 0.06),
+    12px 12px 18px 0 rgb(168 85 247 / 0.11),
+    -10px 12px 16px 0 rgb(84 148 251 / 0.06);
+}
+
+/*
+ * Profile-style halo: sharp square plate behind the element. Keep
+ * border-radius: 0 and a light blur — heavy blur rounds the plate.
+ */
+.accent-glow-halo {
+  position: relative;
+}
+
+.accent-glow-halo::before {
+  content: "";
+  position: absolute;
+  inset: -1.15rem;
+  z-index: -1;
+  border-radius: 0;
+  background: var(--accent-glow-halo);
+  filter: blur(10px);
+  opacity: 0.55;
+  pointer-events: none;
+}
+
 /* Black acrylic panes. The perimeter is the darkest part of the sheet — light
    only ever arrives as (a) faint surface glare and (b) a wide backlight that
    spills from behind a pane while it is focused.
@@ -120,15 +219,15 @@ body {
   --glass-edge: inset 0 0 0 1px rgb(0 0 0 / 0.55),
     inset 0 0 26px -6px rgb(0 0 0 / 0.7), inset 0 0 72px -26px rgb(0 0 0 / 0.5);
   --glass-lift: 0 26px 60px -44px rgb(0 0 0 / 0.9);
-  --glass-backlight: 0 0 50px 2px rgb(0 212 255 / 0),
-    0 0 110px 20px rgb(0 212 255 / 0), 0 0 170px 44px rgb(168 85 247 / 0);
+  --glass-backlight: var(--glow-backlight-off);
   border: 0;
   border-radius: 0;
   box-shadow: var(--glass-edge), var(--glass-lift), var(--glass-backlight);
   -webkit-backdrop-filter: var(--glass-filter);
   backdrop-filter: var(--glass-filter);
   transition: background-position 0.9s ease, background-color 0.4s ease,
-    opacity 0.35s ease, transform 0.55s cubic-bezier(0.2, 0.7, 0.2, 1);
+    opacity 0.35s ease, transform 0.55s cubic-bezier(0.2, 0.7, 0.2, 1),
+    box-shadow 0.45s ease;
 }
 
 .glass-pane {
@@ -230,8 +329,7 @@ body {
   --glass-edge: inset 0 0 0 1px rgb(0 12 28 / 0.55),
     inset 0 0 28px -8px rgb(0 0 0 / 0.55);
   --glass-lift: 0 22px 50px -40px rgb(0 0 0 / 0.85);
-  --glass-backlight: 0 0 50px 2px rgb(0 212 255 / 0),
-    0 0 110px 20px rgb(0 212 255 / 0), 0 0 170px 44px rgb(168 85 247 / 0);
+  --glass-backlight: var(--glow-backlight-off);
   border: 0;
   border-radius: 0;
   box-shadow: var(--glass-edge), var(--glass-lift), var(--glass-backlight);
@@ -244,6 +342,7 @@ body {
     rgb(6 10 22 / 0.2) 42%,
     rgb(168 85 247 / 0.08) 100%
   );
+  transition: box-shadow 0.45s ease;
 }
 
 /* Accent tags: acrylic tint without backdrop-filter (too many small blurs). */
@@ -268,8 +367,7 @@ body {
   box-shadow:
     inset 0 0 0 1px rgb(0 30 50 / 0.45),
     inset 0 0 18px -8px rgb(0 0 0 / 0.55),
-    inset 0 1px 0 rgb(255 255 255 / 0.18),
-    0 0 18px -10px rgb(0 212 255 / 0.35);
+    inset 0 1px 0 rgb(255 255 255 / 0.18);
 }
 
 /* Hover only slides the glare and lets a hint of backlight through. */
@@ -277,42 +375,122 @@ body {
   .glass-pane.hover-glass:hover {
     background-color: rgb(3 3 8 / 0.38);
     background-position: 58% 58%, 0% 0%, 0% 0%;
-    --glass-backlight: 0 0 50px 2px rgb(0 212 255 / 0.07),
-      0 0 110px 20px rgb(0 212 255 / 0.05),
-      0 0 170px 44px rgb(168 85 247 / 0.045);
+    --glass-backlight: var(--glow-backlight-sm);
   }
 
   .glass-pane-inset.hover-glass:hover {
     background-position: 58% 58%, 0% 0%;
-    --glass-backlight: 0 0 50px 2px rgb(0 212 255 / 0.05),
-      0 0 110px 20px rgb(0 212 255 / 0.035),
-      0 0 170px 44px rgb(168 85 247 / 0.03);
+    --glass-backlight: var(--glow-backlight-xs);
   }
 }
 
-/* Accent glow utilities read as backlight strength on a pane. */
-:is(.glass-pane, .glass-pane-inset).accent-glow-sm {
-  --glass-backlight: 0 0 50px 2px rgb(0 212 255 / 0.08),
-    0 0 110px 20px rgb(0 212 255 / 0.05),
-    0 0 170px 44px rgb(168 85 247 / 0.04);
+/* Mild resting glow on dark glass buttons/links only (not panes, not selects).
+   Featured carousel is an <a> but should use the card halo, not button. */
+:is(a, button).glass-pane:not(.featured-pane),
+:is(a, button).glass-pane-inset {
+  --glass-backlight: var(--glow-backlight-button);
 }
 
-:is(.glass-pane, .glass-pane-inset).accent-glow-md {
-  --glass-backlight: 0 0 50px 2px rgb(0 212 255 / 0.12),
-    0 0 110px 20px rgb(0 212 255 / 0.08),
-    0 0 170px 44px rgb(168 85 247 / 0.06);
+/* Hero featured log box — same distance scale as timeline cards. */
+.featured-pane.glass-pane {
+  --glass-backlight: var(--glow-backlight-card);
+  box-shadow: var(--glass-edge), var(--glass-lift), var(--glass-backlight);
 }
 
-:is(.glass-pane, .glass-pane-inset).accent-glow-lg {
-  --glass-backlight: 0 0 50px 2px rgb(0 212 255 / 0.15),
-    0 0 110px 20px rgb(0 212 255 / 0.1),
-    0 0 170px 44px rgb(168 85 247 / 0.08);
+@media (hover: hover) {
+  .featured-pane.glass-pane.hover-glass:hover {
+    --glass-backlight: var(--glow-backlight-card-strong);
+  }
 }
 
-:is(.glass-pane, .glass-pane-inset).accent-glow-xl {
-  --glass-backlight: 0 0 50px 2px rgb(0 212 255 / 0.18),
-    0 0 110px 20px rgb(0 212 255 / 0.13),
-    0 0 170px 44px rgb(168 85 247 / 0.1);
+/* Accent glow utilities map onto the shared backlight scale on panes.
+   Re-assert the full glass shadow stack so `.accent-glow-*` doesn't wipe edges. */
+:is(.glass-pane, .glass-pane-inset, .glass-pane-board).accent-glow-xs {
+  --glass-backlight: var(--glow-backlight-xs);
+  box-shadow: var(--glass-edge), var(--glass-lift), var(--glass-backlight);
+}
+
+:is(.glass-pane, .glass-pane-inset, .glass-pane-board).accent-glow-sm {
+  --glass-backlight: var(--glow-backlight-sm);
+  box-shadow: var(--glass-edge), var(--glass-lift), var(--glass-backlight);
+}
+
+:is(.glass-pane, .glass-pane-inset, .glass-pane-board).accent-glow-md {
+  --glass-backlight: var(--glow-backlight-md);
+  box-shadow: var(--glass-edge), var(--glass-lift), var(--glass-backlight);
+}
+
+:is(.glass-pane, .glass-pane-inset, .glass-pane-board).accent-glow-lg {
+  --glass-backlight: var(--glow-backlight-lg);
+  box-shadow: var(--glass-edge), var(--glass-lift), var(--glass-backlight);
+}
+
+:is(.glass-pane, .glass-pane-inset, .glass-pane-board).accent-glow-xl {
+  --glass-backlight: var(--glow-backlight-xl);
+  box-shadow: var(--glass-edge), var(--glass-lift), var(--glass-backlight);
+}
+
+/* Beat the quiet button backlight when a glass link opts into accent-glow-*. */
+:is(a, button).glass-pane.accent-glow-xs {
+  --glass-backlight: var(--glow-backlight-xs);
+  box-shadow: var(--glass-edge), var(--glass-lift), var(--glass-backlight);
+}
+
+:is(a, button).glass-pane.accent-glow-sm {
+  --glass-backlight: var(--glow-backlight-sm);
+  box-shadow: var(--glass-edge), var(--glass-lift), var(--glass-backlight);
+}
+
+:is(a, button).glass-pane.accent-glow-button-lift {
+  --glass-backlight: var(--glow-backlight-button-lift);
+  box-shadow: var(--glass-edge), var(--glass-lift), var(--glass-backlight);
+}
+
+/*
+ * Phone / narrow viewports: light only outer shells. Nested insets (media
+ * frames, thumbnails, chips) stay dark — otherwise every inner box doubles
+ * the parent glow.
+ */
+@media (max-width: 767px) {
+  [data-timeline-card].glass-pane,
+  .featured-pane.glass-pane,
+  .mobile-notice-pane.glass-pane {
+    background-color: rgb(4 6 14 / 0.9);
+    --glass-backlight: var(--glow-backlight-card);
+  }
+
+  .glass-pane-board {
+    --glass-backlight: var(--glow-backlight-sm);
+  }
+
+  /* Buttons stay on the quiet button scale even on mobile. */
+  :is(a, button).glass-pane:not(.featured-pane),
+  :is(a, button).glass-pane-inset {
+    --glass-backlight: var(--glow-backlight-button);
+  }
+
+  /* Nested media / chips / frames — never a resting backlight on phone.
+     Comes after button rules so board/card children stay dark. */
+  .glass-pane-inset,
+  [data-timeline-card] .glass-pane-inset,
+  .featured-pane .glass-pane-inset,
+  .glass-pane-board .glass-pane,
+  .glass-pane-board .glass-pane-inset,
+  .glass-pane-board :is(a, button).glass-pane,
+  .glass-pane-board :is(a, button).glass-pane-inset {
+    --glass-backlight: var(--glow-backlight-off);
+  }
+
+  /* Opt-in accent glows on glass links still win on phone. */
+  :is(a, button).glass-pane.accent-glow-xs {
+    --glass-backlight: var(--glow-backlight-xs);
+    box-shadow: var(--glass-edge), var(--glass-lift), var(--glass-backlight);
+  }
+
+  :is(a, button).glass-pane.accent-glow-button-lift {
+    --glass-backlight: var(--glow-backlight-button-lift);
+    box-shadow: var(--glass-edge), var(--glass-lift), var(--glass-backlight);
+  }
 }
 
 /* Section splits inside a pane: a dark seam with a faint glint, never a rule. */
@@ -439,6 +617,10 @@ body {
   .hover-accent-glow-sm:hover {
     box-shadow: var(--accent-glow-sm);
   }
+
+  .hover-accent-glow-button:hover {
+    box-shadow: var(--accent-glow-button);
+  }
 }
 
 .timeline-card {
@@ -460,17 +642,15 @@ body {
 /* Plane-driven focus: the entry the plane is snapped to gets emphasized. */
 [data-timeline-entry] [data-timeline-card] {
   transition: opacity 0.35s ease, transform 0.55s cubic-bezier(0.2, 0.7, 0.2, 1),
-    background-position 0.7s ease;
+    background-position 0.7s ease, box-shadow 0.45s ease;
 }
 
-/* Focus is the only state that lights a card, and it arrives from behind. */
+/* Focus lights a card with the shared stronger card backlight. */
 [data-timeline-entry][data-focused="true"] [data-timeline-card] {
   opacity: 1;
   background-color: rgb(4 4 10 / 0.36);
   background-position: 62% 62%, 0% 0%, 0% 0%;
-  --glass-backlight: 0 0 50px 2px rgb(0 212 255 / 0.16),
-    0 0 110px 20px rgb(0 212 255 / 0.11),
-    0 0 170px 44px rgb(168 85 247 / 0.09);
+  --glass-backlight: var(--glow-backlight-card-strong);
   transform: translateY(-3px);
 }
 

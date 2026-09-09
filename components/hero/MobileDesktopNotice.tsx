@@ -37,16 +37,10 @@ export function MobileDesktopNotice() {
       />
 
       <div className="relative w-full max-w-sm">
-        <div
-          className="pointer-events-none absolute -inset-6 accent-gradient-soft-bg opacity-60 blur-2xl"
-          aria-hidden
-        />
-        <div className="glass-pane accent-glow-md relative overflow-hidden p-6">
+        <div className="mobile-notice-pane glass-pane relative overflow-hidden p-6">
           <div className="accent-gradient-bg h-1 w-full" aria-hidden />
           <div className="mt-5 flex flex-col items-center text-center">
-            <div className="glass-pane-inset accent-glow-sm flex h-14 w-14 items-center justify-center">
-              <MonitorIcon />
-            </div>
+            <MonitorIcon />
             <p className="mt-4 font-mono text-[10px] uppercase tracking-[0.22em] text-accent-blue">
               Heads up
             </p>

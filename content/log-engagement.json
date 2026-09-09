@@ -9,6 +9,10 @@
     "sandbox-1": {
       "views": 4,
       "reactions": {}
+    },
+    "square-optimizer": {
+      "views": 1,
+      "reactions": {}
     }
   }
 }

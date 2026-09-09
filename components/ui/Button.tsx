@@ -1,8 +1,10 @@
 import { cn } from "@/lib/cn";
 
 const variants = {
-  primary: "accent-gradient-soft-bg text-accent-blue hover-accent-glow-sm",
+  primary:
+    "accent-gradient-soft-bg accent-glow-button text-accent-blue hover-accent-glow-button",
   ghost: "text-text-muted hover:text-accent-blue hover:bg-bg-subtle",
+  secondary: "glass-pane hover-glass text-text-primary",
 };
 
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {

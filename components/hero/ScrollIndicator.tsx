@@ -50,7 +50,7 @@ export function ScrollIndicator() {
       aria-label="Scroll to timeline"
       onClick={scrollToTimeline}
       className={cn(
-        "absolute bottom-8 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-2 text-text-muted opacity-100 transition-all duration-500 hover-accent-glow-sm hover:text-accent-blue focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent-purple"
+        "absolute bottom-8 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-2 text-text-muted opacity-100 transition-all duration-500 hover-accent-glow-button hover:text-accent-blue focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent-purple"
       )}
     >
       <span className="font-mono text-[10px] uppercase tracking-[0.2em]">

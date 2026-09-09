@@ -2,7 +2,16 @@
 
 import { useEffect, useRef } from "react";
 
-const TARGET_POINTS = 110;
+/* Node count follows viewport area so spacing (and therefore the perceived
+   density of stars and links) is identical on a laptop and on a 4K display.
+   The reference pair below is the viewport the mesh was originally tuned on. */
+const REFERENCE_AREA = 1440 * 900;
+const REFERENCE_POINTS = 160;
+const POINT_DENSITY = REFERENCE_POINTS / REFERENCE_AREA;
+/* Perf rails. The ceiling holds exact spacing through a 5K viewport; only
+   6K and wider desktops thin out, and only slightly. */
+const MIN_POINTS = 100;
+const MAX_POINTS = 2000;
 const WAVE_AMP = 6;
 const DRIFT_AMP = 11;
 const LINK_RATIO = 2.05;
@@ -83,11 +92,23 @@ function activity(
   return field * deadZoneFactor(x, y, viewW, viewH);
 }
 
-function buildPoints(width: number, height: number): {
+type Mesh = {
   points: Point[];
   maxLink: number;
-} {
-  const spacing = Math.sqrt((width * height) / TARGET_POINTS) * 0.92;
+  /** Per-frame scratch, sized once per mesh so draw() allocates nothing. */
+  nx: Float64Array;
+  ny: Float64Array;
+  nact: Float64Array;
+  active: Int32Array;
+};
+
+function buildPoints(width: number, height: number): Mesh {
+  const area = width * height;
+  const targetPoints = Math.min(
+    MAX_POINTS,
+    Math.max(MIN_POINTS, Math.round(area * POINT_DENSITY))
+  );
+  const spacing = Math.sqrt(area / targetPoints) * 0.92;
   const rowStep = spacing * (Math.sqrt(3) / 2);
   const points: Point[] = [];
 
@@ -112,11 +133,19 @@ function buildPoints(width: number, height: number): {
     }
   }
 
-  return { points, maxLink: spacing * LINK_RATIO };
+  return {
+    points,
+    maxLink: spacing * LINK_RATIO,
+    nx: new Float64Array(points.length),
+    ny: new Float64Array(points.length),
+    nact: new Float64Array(points.length),
+    active: new Int32Array(points.length),
+  };
 }
 
-function bucketKey(x: number, y: number, cell: number): string {
-  return `${Math.floor(x / cell)},${Math.floor(y / cell)}`;
+/** Numeric bucket id — string keys cost more than the lookup itself here. */
+function bucketKey(cx: number, cy: number): number {
+  return (cx + 4096) * 16384 + (cy + 4096);
 }
 
 /** Cheap star: solid discs for small nodes; one gradient only for bright ones. */
@@ -184,8 +213,10 @@ export function WireframeBackground() {
     let height = 0;
     let dpr = 1;
     let lastDraw = 0;
-    let scrolling = false;
-    let scrollIdleTimer: number | null = null;
+    // Time spent hidden is subtracted from the animation clock, so returning
+    // to the tab continues the motion instead of snapping it forward.
+    let clockOffset = 0;
+    let pausedAt: number | null = null;
 
     const resize = () => {
       width = window.innerWidth;
@@ -204,11 +235,16 @@ export function WireframeBackground() {
       const mesh = meshRef.current;
       if (!mesh) return;
 
-      const { points, maxLink } = mesh;
+      const { points, maxLink, nx, ny, nact, active } = mesh;
       ctx.clearRect(0, 0, width, height);
 
       const time = t / 1000;
-      const nodes = points.map((p) => {
+      const cell = maxLink * 0.72;
+      const buckets = new Map<number, number[]>();
+      let activeCount = 0;
+
+      for (let i = 0; i < points.length; i++) {
+        const p = points[i];
         const wave = reduced
           ? 0
           : Math.sin(time * p.freq + p.phase) * WAVE_AMP +
@@ -222,52 +258,49 @@ export function WireframeBackground() {
         const x = p.bx + wave * 0.5 + driftX;
         const y = p.by + wave + driftY;
         const act = activity(x, y, time, width, height);
-        return { x, y, act, p };
-      });
 
-      const cell = maxLink * 0.72;
-      const buckets = new Map<string, number[]>();
-      const active: number[] = [];
+        nx[i] = x;
+        ny[i] = y;
+        nact[i] = act;
+        if (act < ACTIVITY_CUTOFF) continue;
 
-      nodes.forEach((n, idx) => {
-        if (n.act < ACTIVITY_CUTOFF) return;
-        active.push(idx);
-        const key = bucketKey(n.x, n.y, cell);
+        active[activeCount++] = i;
+        const key = bucketKey(Math.floor(x / cell), Math.floor(y / cell));
         const list = buckets.get(key);
-        if (list) list.push(idx);
-        else buckets.set(key, [idx]);
-      });
+        if (list) list.push(i);
+        else buckets.set(key, [i]);
+      }
 
-      const drawn = new Set<string>();
-
-      for (const i of active) {
-        const a = nodes[i];
-        const cx = Math.floor(a.x / cell);
-        const cy = Math.floor(a.y / cell);
+      // Each node lives in exactly one bucket and pairs are ordered j > i,
+      // so every edge is visited once — no dedupe set needed.
+      for (let k = 0; k < activeCount; k++) {
+        const i = active[k];
+        const ax = nx[i];
+        const ay = ny[i];
+        const aAct = nact[i];
+        const cx = Math.floor(ax / cell);
+        const cy = Math.floor(ay / cell);
 
         // 3×3 neighborhood is enough at this spacing.
         for (let ox = -1; ox <= 1; ox++) {
           for (let oy = -1; oy <= 1; oy++) {
-            const neighbors = buckets.get(`${cx + ox},${cy + oy}`);
+            const neighbors = buckets.get(bucketKey(cx + ox, cy + oy));
             if (!neighbors) continue;
 
             for (const j of neighbors) {
               if (j <= i) continue;
 
-              const key = `${i}-${j}`;
-              if (drawn.has(key)) continue;
-
-              const b = nodes[j];
-              const dist = Math.hypot(b.x - a.x, b.y - a.y);
+              const dx = nx[j] - ax;
+              const dy = ny[j] - ay;
+              const dist = Math.sqrt(dx * dx + dy * dy);
               if (dist > maxLink * 1.08) continue;
 
               const pulse = Math.sin(time * 0.95 + edgePhase(i, j));
-              const linkStrength = Math.min(a.act, b.act);
+              const linkStrength = Math.min(aAct, nact[j]);
               const limit =
                 maxLink * (0.68 + 0.52 * pulse) * (0.55 + 0.45 * linkStrength);
 
               if (dist > limit) continue;
-              drawn.add(key);
 
               const fade = (1 - dist / limit) * linkStrength;
               const alpha = fade * (0.4 + 0.6 * (0.5 + 0.5 * pulse)) * 0.42;
@@ -278,26 +311,27 @@ export function WireframeBackground() {
                   : `rgba(168, 85, 247, ${alpha})`;
               ctx.lineWidth = 0.55;
               ctx.beginPath();
-              ctx.moveTo(a.x, a.y);
-              ctx.lineTo(b.x, b.y);
+              ctx.moveTo(ax, ay);
+              ctx.lineTo(nx[j], ny[j]);
               ctx.stroke();
             }
           }
         }
       }
 
-      for (const i of active) {
-        const n = nodes[i];
-        const fade = Math.min(1, (n.act - ACTIVITY_CUTOFF) / 0.35);
+      for (let k = 0; k < activeCount; k++) {
+        const i = active[k];
+        const p = points[i];
+        const fade = Math.min(1, (nact[i] - ACTIVITY_CUTOFF) / 0.35);
         drawStar(
           ctx,
-          n.x,
-          n.y,
-          n.p.starSize,
-          n.p.starGlow,
-          n.p.starHue,
-          n.p.twinkle,
-          n.p.phase,
+          nx[i],
+          ny[i],
+          p.starSize,
+          p.starGlow,
+          p.starHue,
+          p.twinkle,
+          p.phase,
           time,
           0.55 + fade * 0.45
         );
@@ -306,11 +340,16 @@ export function WireframeBackground() {
 
     const loop = (t: number) => {
       rafRef.current = requestAnimationFrame(loop);
-      // Skip heavy redraws while the user is scrolling or between FPS ticks.
-      if (scrolling) return;
+
+      if (pausedAt !== null) {
+        clockOffset += t - pausedAt;
+        pausedAt = null;
+        lastDraw = 0;
+      }
+
       if (t - lastDraw < FRAME_MS) return;
       lastDraw = t;
-      draw(t);
+      draw(t - clockOffset);
     };
 
     const start = () => {
@@ -322,20 +361,13 @@ export function WireframeBackground() {
       if (rafRef.current !== null) {
         cancelAnimationFrame(rafRef.current);
         rafRef.current = null;
+        if (pausedAt === null) pausedAt = performance.now();
       }
     };
 
     const onVisibility = () => {
       if (document.hidden) stop();
       else start();
-    };
-
-    const onScroll = () => {
-      scrolling = true;
-      if (scrollIdleTimer !== null) window.clearTimeout(scrollIdleTimer);
-      scrollIdleTimer = window.setTimeout(() => {
-        scrolling = false;
-      }, 120);
     };
 
     let resizeTimer: number | null = null;
@@ -356,14 +388,11 @@ export function WireframeBackground() {
     }
 
     window.addEventListener("resize", onResize, { passive: true });
-    window.addEventListener("scroll", onScroll, { passive: true });
     document.addEventListener("visibilitychange", onVisibility);
     return () => {
       window.removeEventListener("resize", onResize);
-      window.removeEventListener("scroll", onScroll);
       document.removeEventListener("visibilitychange", onVisibility);
       if (resizeTimer !== null) window.clearTimeout(resizeTimer);
-      if (scrollIdleTimer !== null) window.clearTimeout(scrollIdleTimer);
       stop();
     };
   }, []);
@@ -372,7 +401,9 @@ export function WireframeBackground() {
     <canvas
       ref={canvasRef}
       aria-hidden
-      className="pointer-events-none fixed inset-0 z-0"
+      // transform-gpu keeps the fixed canvas on its own compositor layer, so
+      // scrolling the page over it composites instead of repainting it.
+      className="pointer-events-none fixed inset-0 z-0 transform-gpu"
     />
   );
 }
